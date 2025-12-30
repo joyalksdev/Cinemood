@@ -21,15 +21,15 @@ export default function Hero() {
               key={movie.id + i}
               src={`https://image.tmdb.org/t/p/w342${movie.poster_path}`}
               className="w-full h-full object-cover rounded-lg"
-              alt={movie.title}
+              alt={movie.title} loading="lazy"
             />
           ))}
         </div>
 
       <div className="absolute inset-0 bg-linear-to-b from-black/80 via-black/60 to-black"></div>
 
-      <div className="relative z-10 flex flex-col items-center justify-center h-full text-center px-6">
-          <div className="max-w-[45vw] flex flex-col mb-3 gap-3">
+      <div className="relative z-10 flex flex-col items-center justify-center h-[90%] text-center px-6">
+          <div className="max-w-180 flex flex-col mb-3 gap-3">
             <h2 className="heading text-6xl font-normal"><span className="font-semibold">Discover cinema</span> the way it was <span className="font-semibold">meant to be explored.</span></h2>
             <p className="text-lg">Explore trending titles, deep-dive into film details, build your watchlist and discover movies made just for your taste.</p>
           </div>

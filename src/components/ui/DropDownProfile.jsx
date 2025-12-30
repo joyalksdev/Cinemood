@@ -1,10 +1,12 @@
 import React from 'react'
 import { useState, useRef, useEffect } from 'react'
 import { NavLink } from 'react-router-dom'
-
+import { useUser } from '../../context/UserContext';
 
 const DropDownProfile = () => {
-
+    
+    const { user, logout } = useUser()
+    
     const [openDropdown, setOpenDropdown] = useState(false)
     const dropdownRef = useRef(null)
     useEffect(()=>{
@@ -27,11 +29,11 @@ const DropDownProfile = () => {
 
         {
             openDropdown && (
-                <div ref={dropdownRef} className={`absolute right-0 mt-3 w-44 profile-menu border border-gray-700 rounded-xl shadow-xl overflow-hidden transition-all duration-200 opacity-100 scale-100" }`}>
-                    <h2 className='text-center p-3 text-lg font-bold'>Joyal</h2>
+                <div ref={dropdownRef} className={`absolute right-0 mt-3 w-34 profile-menu border border-gray-700 rounded-xl shadow-xl overflow-hidden transition-all duration-200 opacity-100 scale-100" }`}>
+                    <h2 className='text-center py-2 px-5 text-lg font-bold'>{user.name}</h2>
                     <NavLink to='my-list' className='block px-4 py-2 w-ful text-left hover:bg-[#1f1f1f]'>My-List</NavLink>
                     <NavLink to='profile' className='block px-4 py-2 w-ful text-left hover:bg-[#1f1f1f]'>Profile</NavLink>
-                    <button className='w-full text-red-400 px-4 py-2 hover:bg-[#1f1f1f]'>Log Out</button>
+                    <button onClick={logout} className='w-full text-red-400 px-4 py-2 hover:bg-[#1f1f1f]'>Log Out</button>
                 </div>
             )
         }

@@ -5,6 +5,11 @@ body {
   color: #ffffff;
 }
 
+::selection{
+  background-color: #24597aa1;
+  color: #ffffff;
+}
+
 .heading {
   font-family: 'Poppins', sans-serif;
   letter-spacing: 0.5px;
