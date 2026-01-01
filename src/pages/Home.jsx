@@ -1,29 +1,29 @@
 import React from 'react'
-import Hero from '../components/sections/Hero'
-import SpotlightCard from '../components/SpotlightCard'
-import { RiShiningFill } from "react-icons/ri";
+import { useUser } from '../context/UserContext'
+import RecommendationCard from '../components/cards/RecommendationCard'
+
 
 const Home = () => {
-  return (
-    <div>
-      <Hero />
-        <div className='flex gap-5 mt-10'>
 
-          <SpotlightCard spotlightColor="#ceb04f">
-            <div className='p-6'>
-              <RiShiningFill className='size-10'/>
-            </div>
-            <div className="p-6 flex flex-col gap-2 text-white">
-             <span className="text-[#FFC509] text-sm tracking-wider uppercase">Hot Right Now</span>
-             <h3 className="text-2xl heading font-semibold">Trending Movies</h3>
-              <p className="text-gray-400">
-                The most watched movies across the world today.
-              </p>
-              
-            </div>
-          </SpotlightCard>
-          
+  const {user} = useUser()
+
+  return (
+    <div className='px-5'>
+      <div className='flex flex-col justify-center items-center py-5'>
+        <h2 className='text-4xl heading font-medium'>Welcome back,<span className='font-bold pl-2'> {user.name}</span>👋</h2>
+        <p className='p-2 text-lg'>Ready to find your next favorite movie?</p>
+        <p className='text-amber-200'>Your mood. Your movies. Your CineMood.</p>
+      </div> 
+      
+      <section>
+        <div>
+          <h2 className='font-bold heading text-2xl'>🎯 Recommended for You</h2>
+          <p className='p-1 font-medium text-neutral-200/50'>Movies selected based on what you love.</p>
         </div>
+        
+          <RecommendationCard />
+      </section>
+
     </div>
   )
 }

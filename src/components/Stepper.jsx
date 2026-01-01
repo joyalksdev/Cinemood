@@ -1,4 +1,5 @@
 import React, { useState, Children, useRef, useLayoutEffect } from 'react';
+import { FaArrowRight, FaFilm } from "react-icons/fa";
 import { motion, AnimatePresence } from 'motion/react';
 
 export default function Stepper({
@@ -116,10 +117,20 @@ export default function Stepper({
               )}
               <button
                 onClick={isLastStep ? handleComplete : handleNext}
-                className="duration-350 flex items-center justify-center rounded-full bg-[#FFC509] py-1.5 px-3.5 font-medium tracking-tight text-black transition hover:bg-amber-300 cursor-pointer active:bg-green-700"
+                className="duration-350 flex items-center justify-center gap-2 rounded-full bg-[#FFC509] py-1.5 px-3.5 font-medium tracking-tight text-black transition hover:bg-amber-300 cursor-pointer active:bg-green-700"
                 {...nextButtonProps}
               >
-                {isLastStep ? 'CineMood →' : nextButtonText}
+               {isLastStep ? (
+                <>
+                  <FaFilm className="text-sm" />
+                  <span>CineMood</span>
+                </>
+              ) : (
+                <>
+                  <span>{nextButtonText}</span>
+                  <FaArrowRight className="text-sm" />
+                </>
+              )}
               </button>
             </div>
           </div>

@@ -14,14 +14,14 @@ const Navbar = () => {
         <Link to='/'> 
         <div className='text-[25px] heading flex gap-3 items-center '>
             <img src={logo} alt="Logo" className='h-8 w-auto' />
-            <h2 className='font-medium'><span className='text-[#FFC509] font-bold m-0'>Cine</span>mood</h2>
+            <h2 className='font-medium'><span className='text-[#FFC509] font-bold m-0'>Cine</span>Mood</h2>
         </div>
         </Link>
 
         <ul className='flex gap-10 '>
-            <NavLink to='/' className={({isActive}) => isActive ? "text-[#FFC509] transition-all ease-linear" : "text-white hover:text-orange-300 transition-all ease-linear" } >Home</NavLink>
-            <NavLink to='browse' className={({isActive}) => isActive ? "text-[#FFC509] transition-all ease-linear" : "text-white hover:text-orange-300 transition-all ease-linear" } >Browse</NavLink>
-            <NavLink to='watchlist' className={({isActive}) => isActive ? "text-[#FFC509] transition-all ease-linear" : "text-white hover:text-orange-300 transition-all ease-linear" } >Watchlist</NavLink>
+            <NavLink to='/home' className={({isActive}) => isActive ? "text-[#FFC509] transition-all ease-linear" : "text-white hover:text-neutral-300 transition-all ease-linear" } >Home</NavLink>
+            <NavLink to='browse' className={({isActive}) => isActive ? "text-[#FFC509] transition-all ease-linear" : "text-white hover:text-neutral-300 transition-all ease-linear" } >Browse</NavLink>
+            <NavLink to='watchlist' className={({isActive}) => isActive ? "text-[#FFC509] transition-all ease-linear" : "text-white hover:text-neutral-300 transition-all ease-linear" } >Watchlist</NavLink>
         </ul>
 
         <div className='hidden items-center max-w-full lg:max-w-full md:max-w-50 sm:hidden backdrop-blur-xs md:flex lg:flex px-3 py-1 bg-transparent border border-stone-100/30 rounded-lg'>

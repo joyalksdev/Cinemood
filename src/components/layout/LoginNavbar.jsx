@@ -1,15 +1,20 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import logo from '../../assets/logo.png'
-const LoginNavbar = () => {
+import { IoLanguage } from "react-icons/io5";
+import { useUser } from '../../context/UserContext';
+
+const LoginNavbar = ({showGetStarted = true}) => {
+    const {user} = useUser()
+    const navigate = useNavigate()
   return (
   
-    <nav className='fixed top-0 left-0 md:w-full lg:w-full sm:w-full z-50 bg-linear-to-b from-black/90 to-transparent backdrop-blur-md px-10 py-5 flex items-center justify-between text-white'>
+    <nav className='fixed top-0 left-0 md:w-full w-full lg:w-full sm:w-full z-50 bg-linear-to-b from-black/90 to-transparent backdrop-blur-md px-10 py-5 flex items-center text-white justify-between'>
         
-        <Link to='/get-started'> 
+        <Link to='/landing'> 
         <div className='text-[25px] heading flex gap-3 items-center '>
             <img src={logo} alt="Logo" className='h-8 w-auto' />
-            <h2 className='font-medium'><span className='text-[#FFC509] font-bold m-0'>Cine</span>mood</h2>
+            <h2 className='font-medium'><span className='text-[#FFC509] font-bold m-0'>Cine</span>Mood</h2>
         </div>
         </Link>
 
@@ -17,8 +22,24 @@ const LoginNavbar = () => {
 
         
 
-        <div>
-            Language
+        <div className='flex gap-3'>
+
+          {showGetStarted && (
+          <button
+            className='px-3 py-1 bg-[#FFC509] rounded-lg text-black hover:bg-amber-300'
+            onClick={() => navigate(user ? '/home' : '/get-started')}
+          >
+            Get Started
+          </button>
+        )}
+
+          <div className='px-3 py-1 gap-1 hidden md:flex items-center border border-neutral-600 rounded-lg'>
+            <IoLanguage className='size-5' />
+            <select className='outline-none bg-transparent' name="language" id="language">
+              <option  className=' bg-neutral-800' value="English  .">English</option>
+              <option className=' bg-neutral-800' value="Hindi">Hindi</option>
+            </select>
+          </div>  
         </div>
 
     </nav>

@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
+import LoginNavbar from '../components/layout/LoginNavbar'
 import { useUser } from "../context/UserContext"
 import Stepper, {Step} from '../components/Stepper'
 
@@ -11,6 +12,9 @@ const GetStarted = () => {
   return (
 
     <>
+    <LoginNavbar showGetStarted={false} />
+    <main>
+      
     <Stepper
       initialStep={1}
       onStepChange={(step) => {
@@ -48,8 +52,9 @@ const GetStarted = () => {
         <p>Your personalized movie world is ready.</p>
       </Step>
     </Stepper>
-  </>
 
+    </main>
+  </>
   )
 }
 

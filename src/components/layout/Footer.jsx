@@ -11,7 +11,7 @@ const Footer = () => {
           <Link to='/'>
             <div className='text-[25px] heading flex gap-3 items-center '>
               <img src={logo} alt="Logo" className='h-8 w-auto' />
-              <h2 className='font-medium'><span className='text-[#FFC509] font-bold m-0'>Cine</span>mood</h2>         
+              <h2 className='font-medium'><span className='text-[#FFC509] font-bold m-0'>Cine</span>Mood</h2>         
             </div>
           </Link>
             <p>Discover cinema the way it was meant to be explored. Your personal space to find, save and fall in love with movies again.</p>           

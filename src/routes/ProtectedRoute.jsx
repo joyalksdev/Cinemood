@@ -5,7 +5,7 @@ const ProtectedRoute = ({ children }) => {
   const { user, loading } = useUser();
 
   if (loading) return null;      // ← WAIT for localStorage
-  if (!user) return <Navigate to="/onboarding" replace />;
+  if (!user) return <Navigate to="/get-started" replace />;
 
   return children;
 };

@@ -8,6 +8,7 @@ import Watchlist from './pages/Watchlist'
 import GetStarted from './pages/GetStarted'
 import ProtectedRoute from './routes/ProtectedRoute'
 import { useUser } from './context/UserContext'
+import Landing from './pages/Landing'
 
 
 
@@ -19,10 +20,11 @@ if (loading) return null
     <BrowserRouter>
       <Routes>
 
-        <Route path="/" element={user ? <Navigate to="/home" /> : <Navigate to="/onboarding" />} />
+        <Route path="/" element={user ? <Navigate to="/home" /> : <Navigate to="/landing" />} />
 
 
-        <Route path='/onboarding' element={<GetStarted />} />
+        <Route path='/get-started' element={<GetStarted />} />
+        <Route path='/landing' element={<Landing />} />
 
         <Route element={
           <ProtectedRoute>
