@@ -1,6 +1,10 @@
 const BASE_URL = import.meta.env.VITE_TMDB_BASE_URL;
 const TOKEN = import.meta.env.VITE_TMDB_TOKEN;
 
+console.log("TMDB BASE URL:", import.meta.env.VITE_TMDB_BASE_URL);
+console.log("TMDB TOKEN EXISTS:", !!import.meta.env.VITE_TMDB_TOKEN);
+
+
 const headers = {
   Authorization: `Bearer ${TOKEN}`,
   "Content-Type": "application/json",
