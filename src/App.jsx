@@ -15,9 +15,8 @@ const App = () => {
 
   return (
     <Routes>
-      <Route path="/" element={user ? <Navigate to="/home" /> : <Navigate to="/landing" />} />
+      <Route path="/" element={user ? <Navigate to="/home" /> : <Landing />} />
       <Route path="/get-started" element={<GetStarted />} />
-      <Route path="/landing" element={<Landing />} />
 
       <Route element={
         <ProtectedRoute>

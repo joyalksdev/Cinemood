@@ -28,7 +28,7 @@ const GetStarted = () => {
     onboardingComplete: true,
     createdAt: new Date().toISOString()
   })
-  navigate('/home')
+  navigate('/')
 }}
 >
 
