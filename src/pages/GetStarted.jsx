@@ -47,7 +47,7 @@ const GetStarted = () => {
       id: Date.now(),
       name,
       genres,
-      avatar: "https://api.dicebear.com/7.x/notionists/svg?seed=" + name,
+      avatar: "https://api.dicebear.com/7.x/micah/svg?seed=" + name,
       language,
       onboardingComplete: true,
       createdAt: new Date().toISOString()

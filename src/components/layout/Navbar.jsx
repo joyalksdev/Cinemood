@@ -4,6 +4,7 @@ import { Link, NavLink } from 'react-router-dom'
 import { HiOutlineSearch } from "react-icons/hi";
 import DropDownProfile from '../ui/DropDownProfile';
 import { useUser } from '../../context/UserContext';
+import SearchBar from '../search/SearchBar';
 
 
 const Navbar = () => {
@@ -24,10 +25,12 @@ const Navbar = () => {
             <NavLink to='watchlist' className={({isActive}) => isActive ? "text-[#FFC509] transition-all ease-linear" : "text-white hover:text-neutral-300 transition-all ease-linear" } >Watchlist</NavLink>
         </ul>
 
-        <div className='hidden items-center max-w-full lg:max-w-full md:max-w-50 sm:hidden backdrop-blur-xs md:flex lg:flex px-3 py-1 bg-transparent border border-stone-100/30 rounded-lg'>
+        {/* <div className='hidden items-center max-w-full lg:max-w-full md:max-w-50 sm:hidden backdrop-blur-xs md:flex lg:flex px-3 py-1 bg-transparent border border-stone-100/30 rounded-lg'>
             <HiOutlineSearch />
             <input type="text"className='outline-none px-2 py-1 rounded text-white placeholder-white' placeholder='Search' />
-        </div>
+        </div> */}
+
+        <SearchBar />
 
         <DropDownProfile />
 

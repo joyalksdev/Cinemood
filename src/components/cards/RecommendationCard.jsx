@@ -54,12 +54,12 @@ const RecommendationCard = () => {
               <div className="flex justify-between pt-2">
                 <button
                   onClick={() => setSelectedMovie(movie)}
-                  className="text-md px-7 py-1 rounded-2xl bg-[#FFC509] hover:bg-amber-300 font-medium text-black"
+                  className="text-md px-7 py-1 rounded-2xl  cursor-pointer bg-[#FFC509] hover:bg-amber-300 font-medium text-black"
                 >
                   View Details
                 </button>
 
-                <button className="text-3xl text-[#FFC509] hover:scale-110 transition">
+                <button className="text-3xl text-[#FFC509] cursor-pointer hover:scale-110 transition">
                   <GoPlusCircle />
                 </button>
               </div>

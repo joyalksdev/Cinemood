@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion"
 import { fetchMovieDetails } from "../../services/tmbdApi"
 import { IoIosAddCircleOutline } from "react-icons/io";
 import { TbMovie } from "react-icons/tb";
+import { Link } from "react-router-dom";
 
 
 
@@ -57,8 +58,12 @@ const QuickViewModal = ({ movie, onClose }) => {
                   Release: {movie.release_date}
                 </p>
             <div className="flex mt-4 gap-3">
-                <button className="px-4 py-2 flex gap-2 items-center bg-[#FFC509] cursor-pointer rounded-md hover:bg-amber-300 transition ease-in font-medium text-black"> <TbMovie  className='size-6' /> View Movie Details</button>
-                <button className="px-4 py-2 flex gap-2 items-center bg-transparent cursor-pointer border border-neutral-400 rounded-md hover:bg-amber-300 transition font-medium hover:text-black"> <IoIosAddCircleOutline  className='size-6' /> Add to Watchlist</button>
+                <Link to='/movie/:id'>
+                    <button className="px-4 py-2 flex gap-2 items-center bg-[#FFC509] cursor-pointer rounded-md hover:bg-amber-300 transition ease-in font-medium text-black"> <TbMovie  className='size-6' /> View Movie Details</button>
+                </Link>
+                <Link>
+                    <button className="px-4 py-2 flex gap-2 items-center bg-transparent cursor-pointer border border-neutral-400 rounded-md hover:bg-amber-300 transition font-medium hover:text-black"> <IoIosAddCircleOutline  className='size-6' /> Add to Watchlist</button>
+                </Link>
             </div>
               </div>
             </div>
