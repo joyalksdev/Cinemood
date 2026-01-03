@@ -1,24 +1,13 @@
+import React from 'react'
 import React, { useEffect, useState } from 'react'
 import { fetchPersonalizedMovies } from '../../services/tmbdApi'
-import { GoPlusCircle } from "react-icons/go"
 import { useUser } from '../../context/UserContext'
-import QuickViewModal from '../ui/QuickViewModal'
-import { useNavigate } from 'react-router-dom'
 
 
-const RecommendationCard = () => {
-  const { user } = useUser()
-  const [movies, setMovies] = useState([])
-  const [selectedMovie, setSelectedMovie] = useState(null)
-  const navigate = useNavigate()
-  
-  useEffect(() => {
-    if (!user?.genres?.length) return
-
-    fetchPersonalizedMovies(user.genres, user.language)
-      .then(data => setMovies(data))
-  }, [user])
-
+const TrendingCard = () => {
+     const { user } = useUser()
+      const [movies, setMovies] = useState([])
+      const [selectedMovie, setSelectedMovie] = useState(null)
   return (
     <>
       {selectedMovie && (
@@ -74,4 +63,4 @@ const RecommendationCard = () => {
   )
 }
 
-export default RecommendationCard
+export default TrendingCard

@@ -20,9 +20,9 @@ const Navbar = () => {
         </Link>
 
         <ul className='flex gap-10 '>
-            <NavLink to='/home' className={({isActive}) => isActive ? "text-[#FFC509] transition-all ease-linear" : "text-white hover:text-neutral-300 transition-all ease-linear" } >Home</NavLink>
-            <NavLink to='browse' className={({isActive}) => isActive ? "text-[#FFC509] transition-all ease-linear" : "text-white hover:text-neutral-300 transition-all ease-linear" } >Browse</NavLink>
-            <NavLink to='watchlist' className={({isActive}) => isActive ? "text-[#FFC509] transition-all ease-linear" : "text-white hover:text-neutral-300 transition-all ease-linear" } >Watchlist</NavLink>
+            <NavLink to='/home' className={({isActive}) => isActive ? "text-[#FFC509] transition-all ease-linear" : "text-white hover:text-amber-500 transition-all ease-linear" } >Home</NavLink>
+            <NavLink to='browse' className={({isActive}) => isActive ? "text-[#FFC509] transition-all ease-linear" : "text-white hover:text-amber-500 transition-all ease-linear" } >Browse</NavLink>
+            <NavLink to='watchlist' className={({isActive}) => isActive ? "text-[#FFC509] transition-all ease-linear" : "text-white hover:text-amber-500 transition-all ease-linear" } >Watchlist</NavLink>
         </ul>
 
         {/* <div className='hidden items-center max-w-full lg:max-w-full md:max-w-50 sm:hidden backdrop-blur-xs md:flex lg:flex px-3 py-1 bg-transparent border border-stone-100/30 rounded-lg'>

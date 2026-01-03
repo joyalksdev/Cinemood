@@ -30,7 +30,7 @@ const SearchBar = () => {
       />
 
       {results.length > 0 && (
-        <div className="absolute mt-2 w-full bg-neutral-900 border border-neutral-700 rounded-lg shadow-xl z-50">
+        <div className="absolute mt-2 w-full bg-neutral-900/95 backdrop-blur-2xl border border-neutral-700 rounded-lg shadow-xl z-50">
           {results.map(movie => (
             <Link
               to={`/movie/${movie.id}`}
@@ -52,6 +52,7 @@ const SearchBar = () => {
           ))}
         </div>
       )}
+
     </div>
   )
 }
