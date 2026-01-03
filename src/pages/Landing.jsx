@@ -1,9 +1,9 @@
 import React from 'react'
 import Footer from '../components/layout/Footer'
 import LoginNavbar from '../components/layout/LoginNavbar'
-import Carousel from '../components/Carousel'
+import Carousel from '../components/ui/Carousel'
 import Hero from '../components/sections/Hero'
-import SpotlightCard from '../components/SpotlightCard'
+import SpotlightCard from '../components/ui/SpotlightCard'
 import { RiShiningFill } from "react-icons/ri";
 import { ImFire } from "react-icons/im";
 import { PiFilmSlateFill } from "react-icons/pi";

@@ -10,6 +10,19 @@ const headers = {
   "Content-Type": "application/json",
 };
 
+export const fetchPersonalizedMovies = async (genres = [], language = "en") => {
+  const genreQuery = genres.join(",")
+
+  const res = await fetch(
+    `${BASE_URL}/discover/movie?with_genres=${genreQuery}&with_original_language=${language}&sort_by=popularity.desc`,
+    { headers }
+  )
+
+  const data = await res.json()
+  return data.results
+}
+
+
 export const fetchTrendingMovies = async () => {
   const res = await fetch(`${BASE_URL}/trending/movie/day`, { headers });
   const data = await res.json();
