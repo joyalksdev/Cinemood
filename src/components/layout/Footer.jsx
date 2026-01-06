@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 const Footer = () => {
   return (
     <footer className='bg-black mt-10 w-full p-5 flex flex-col items-center'>
-      <div className='flex gap-5 justify-between mb-5 py-8 px-2 items-start'>
+      <div className='flex flex-col md:flex-row gap-10 lg:gap-16 justify-between mb-5 py-8 px-2 items-start'>
 
         <div className='flex flex-col max-w-70 gap-3'>
           <Link to='/'>
@@ -17,7 +17,7 @@ const Footer = () => {
             <p>Discover cinema the way it was meant to be explored. Your personal space to find, save and fall in love with movies again.</p>           
         </div>
 
-        <div className='flex flex-col gap-2 px-10'>
+        <div className='flex flex-col gap-2 '>
           <h2 className='font-bold text-xl mb-2'>Explore</h2>
           <Link className="text-md hover:underline transition-all ease-in" >Trending</Link>
           <Link className="text-md hover:underline transition-all ease-in" >New Arrival</Link>
@@ -26,7 +26,7 @@ const Footer = () => {
           <Link className="text-md hover:underline transition-all ease-in" >Watchlist</Link>
         </div>
 
-        <div className='flex flex-col gap-2 px-10'>
+        <div className='flex flex-col gap-2 '>
           <h2 className='font-bold text-xl mb-2'>Support</h2>
           <Link className="text-md hover:underline transition-all ease-in" >FAQ</Link>
           <Link className="text-md hover:underline transition-all ease-in" >Help Centre</Link>
@@ -34,7 +34,7 @@ const Footer = () => {
           <Link className="text-md hover:underline transition-all ease-in" >Report a Problem</Link>
         </div>
 
-        <div className='flex flex-col gap-2 px-10'>
+        <div className='flex flex-col gap-2'>
           <h2 className='font-bold text-xl mb-2'>Legal</h2>
           <Link className="text-md hover:underline transition-all ease-in" >Privacy Policy</Link>
           <Link className="text-md hover:underline transition-all ease-in" >Terms & Conditions</Link>

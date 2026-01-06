@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom"
 import LoginNavbar from '../components/layout/LoginNavbar'
 import { useUser } from "../context/UserContext"
 import Stepper, {Step} from '../components/ui/Stepper'
-import { button } from "motion/react-client"
+
 
 const GENRES = [
   { id: 28, name: "Action" },
@@ -43,15 +43,19 @@ const GetStarted = () => {
         console.log(step);
       }}
       onFinalStepCompleted={() => {
-      saveUser({
+      const newUser = {
       id: Date.now(),
       name,
       genres,
       avatar: "https://api.dicebear.com/7.x/micah/svg?seed=" + name,
       language,
-      onboardingComplete: true,
+      onboarded: true,
       createdAt: new Date().toISOString()
-    })
+    }
+0
+    saveUser(newUser)
+    localStorage.setItem("cinemood_user", JSON.stringify(newUser))
+
     navigate("/")
 }}
 >

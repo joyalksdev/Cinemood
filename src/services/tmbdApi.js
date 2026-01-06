@@ -22,6 +22,36 @@ export const fetchPersonalizedMovies = async (genres = [], language = "en") => {
   return data.results
 }
 
+export const fetchTopRatedMovies = async () => {
+  const res = await fetch(`${BASE_URL}/movie/top_rated`, { headers })
+  return (await res.json()).results
+}
+
+export const fetchPopularMovies = async () => {
+  const res = await fetch(`${BASE_URL}/movie/popular`, { headers })
+  return (await res.json()).results
+}
+
+export const fetchNowPlayingMovies = async () => {
+  const res = await fetch(`${BASE_URL}/movie/now_playing`, { headers })
+  return (await res.json()).results
+}
+
+export const fetchPopularKDramas = async () => {
+  const res = await fetch(
+    `${BASE_URL}/discover/tv?with_original_language=ko&sort_by=popularity.desc`,
+    { headers }
+  )
+  return (await res.json()).results
+}
+
+export const fetchPopularAnime = async () => {
+  const res = await fetch(
+    `${BASE_URL}/discover/tv?with_genres=16&with_original_language=ja&sort_by=popularity.desc`,
+    { headers }
+  )
+  return (await res.json()).results
+}
 
 export const fetchTrendingMovies = async () => {
   const res = await fetch(`${BASE_URL}/trending/movie/day`, { headers });

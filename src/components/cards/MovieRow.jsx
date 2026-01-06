@@ -1,37 +1,35 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { fetchPersonalizedMovies } from '../../services/tmbdApi'
-import { GoPlusCircle } from "react-icons/go"
-import { useUser } from '../../context/UserContext'
 import QuickViewModal from '../ui/QuickViewModal'
-import { useNavigate } from 'react-router-dom'
+import { fetchTrendingMovies } from '../../services/tmbdApi'
 import { IoIosArrowDropleft,IoIosArrowDropright } from "react-icons/io";
+import { GoPlusCircle } from "react-icons/go"
+import { useWatchlist } from '../../context/WatchlistContext';
 
+const MovieRow = ({title, fetchFn}) => {
+    const [movies, setMovies] = useState([])
+    const [loading, setLoading] = useState(true)
+    const [selectedMovie, setSelectedMovie] = useState(null)
+    const {addToWatchlist} = useWatchlist()
+    
 
+    useEffect(()=>{
+        setLoading(true)
+        fetchFn().then(data=>{
+            setMovies(data)
+            setLoading(false)
+        })
+    }, [fetchFn])
 
+    const rowRef = useRef(null)
 
-const RecommendationCard = () => {
-  const { user } = useUser()
-  const [movies, setMovies] = useState([])
-  const [selectedMovie, setSelectedMovie] = useState(null)
-  const navigate = useNavigate()
-  const rowRef = useRef(null)
+    const scroll = (direction) => {
+    const width = rowRef.current.clientWidth
+    rowRef.current.scrollBy({
+        left: direction === "left" ? -width : width,
+        behavior: "smooth"
+    })
+    }
 
-  
-  useEffect(() => {
-    if (!user?.genres?.length) return
-
-    fetchPersonalizedMovies(user.genres, user.language)
-      .then(data => setMovies(data))
-  }, [user])
-  
-  const scroll = (direction) => {
-  if (!rowRef.current) return
-  const width = rowRef.current.clientWidth
-  rowRef.current.scrollBy({
-    left: direction === "left" ? -width : width,
-    behavior: "smooth"
-  })
-}
 
   return (
     <section>
@@ -41,13 +39,9 @@ const RecommendationCard = () => {
           onClose={() => setSelectedMovie(null)}
         />
       )}
-    
 
       <div className="flex justify-between items-center">
-        <div>
-          <h2 className='font-bold heading text-center sm:text-left text-2xl'>🎯 Recommended for You</h2>
-          <p className='p-1 font-medium text-neutral-200/50'>Movies selected based on what you love.</p>
-        </div>
+        <h2 className="text-2xl font-bold">{title}</h2>
 
         <div className="flex gap-3">
           <button
@@ -65,20 +59,21 @@ const RecommendationCard = () => {
         </div>
       </div>
 
-      <div
-        ref={rowRef}
-        className="flex gap-5 overflow-x-auto scrollbar-hide px-6 py-4"
-      >
-        {movies.length === 0 && (
-          <p className="text-neutral-400 px-4">
-            Select genres during onboarding to get personalized recommendations.
-          </p>
+      <div ref={rowRef} className="flex gap-5 overflow-x-auto scrollbar-hide px-6 py-4">
+        
+        {!loading && movies.length === 0 && (
+        
+        <p className="text-neutral-400 px-4">No movies found</p>
         )}
+
 
         {movies.map((movie) => (
           <div
             key={movie.id}
-            className="relative min-w-[240px] max-w-[240px] bg-zinc-900 border border-gray-500/40 rounded-xl overflow-hidden hover:scale-105 transition-transform duration-300"
+            className="group relative min-w-[220px] md:min-w-[220px] min-h-[300px]
+             rounded-xl overflow-hidden bg-neutral-900/40
+             border border-white/10 shadow-lg
+             hover:scale-105 transition-all duration-300 cursor-pointer"
           >
             <img
               src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
@@ -102,7 +97,7 @@ const RecommendationCard = () => {
                   View Details
                 </button>
 
-                <button className="text-3xl text-[#FFC509] cursor-pointer hover:scale-110 transition">
+                <button onClick={()=> addToWatchlist(movie)} className="text-3xl text-[#FFC509] cursor-pointer hover:scale-110 transition">
                   <GoPlusCircle />
                 </button>
               </div>
@@ -111,7 +106,7 @@ const RecommendationCard = () => {
         ))}
       </div>
     </section>
-  );
+  )
 }
 
-export default RecommendationCard
+export default MovieRow

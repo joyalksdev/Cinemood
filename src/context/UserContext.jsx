@@ -1,33 +1,32 @@
-import React from 'react'
-import { useEffect, useState, useContext, createContext } from "react";
+import { createContext, useContext, useEffect, useState } from "react"
 
 const UserContext = createContext()
 
- export const UserProvider = ({ children }) => {
-    const [user, setUser] = useState(null)
-    const [loading, setLoading] = useState(true)
+export const UserProvider = ({ children }) => {
+  const [user, setUser] = useState(null)
+  const [loading, setLoading] = useState(true)
 
-    useEffect(()=>{
-        const storedUser = localStorage.getItem("cinemood_user_v1")
-        if(storedUser)setUser(JSON.parse(storedUser))
-        setLoading(false)
-    },[])
+  useEffect(() => {
+    const saved = localStorage.getItem("cinemood_user")
+    if (saved) setUser(JSON.parse(saved))
+    setLoading(false)
+  }, [])
 
-    const saveUser = (data) =>{
-        localStorage.setItem("cinemood_user_v1", JSON.stringify(data))
-        setUser(data)
-    }
+  const saveUser = (data) => {
+    setUser(data)
+    localStorage.setItem("cinemood_user", JSON.stringify(data))
+  }
 
-    const logout = () =>{
-        localStorage.removeItem("cinemood_user_v1")
-        setUser(null)
-    }
+  const logout = () => {
+    localStorage.removeItem("cinemood_user")
+    setUser(null)
+  }
 
   return (
-    <UserContext.Provider value={{user, saveUser, logout, loading}}>
-        {children}
+    <UserContext.Provider value={{ user, saveUser, logout, loading }}>
+      {children}
     </UserContext.Provider>
   )
 }
 
-export const useUser = () => useContext(UserContext)                                                                                                                  
+export const useUser = () => useContext(UserContext)
