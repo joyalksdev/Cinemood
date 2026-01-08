@@ -5,13 +5,14 @@ import { IoIosAddCircleOutline } from "react-icons/io";
 import { TbMovie } from "react-icons/tb";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-
-
+import { useWatchlist } from "../../context/WatchlistContext";
 
 
 const QuickViewModal = ({ movie, onClose }) => {
   const modalRef = useRef()
   const navigate = useNavigate()
+  const { addToWatchlist } = useWatchlist()
+  
   
 
 
@@ -61,7 +62,7 @@ const QuickViewModal = ({ movie, onClose }) => {
                 </p>
             <div className="flex flex-col sm:flex-row mt-4  gap-3">
               <button onClick={()=> navigate(`/movie/${movie.id}`)} className="px-4 w-full py-2 flex gap-2 items-center bg-[#FFC509] cursor-pointer rounded-md hover:bg-amber-300 transition ease-in font-medium text-black"> <TbMovie  className='size-6' /> View Movie Details</button>
-              <button className="px-4 py-2 flex gap-2 items-center bg-transparent w-full text-center cursor-pointer border border-neutral-400 rounded-md hover:bg-amber-300 transition font-medium hover:text-black"> <IoIosAddCircleOutline  className='size-6' /> Add to Watchlist</button>
+              <button onClick={() => addToWatchlist(movie)} className="px-4 py-2 flex gap-2 items-center bg-transparent w-full text-center cursor-pointer border border-neutral-400 rounded-md hover:bg-amber-300 transition font-medium hover:text-black"> <IoIosAddCircleOutline  className='size-6' /> Add to Watchlist</button>
             </div>
               </div>
             </div>

@@ -24,13 +24,13 @@ const App = () => {
    <Routes>
 
     <Route path="/" element={user ? <Navigate to="/home" /> : <Landing />} />
-    <Route path="/login" element={user ? <Navigate to="/home" /> : <Login />} />
-    <Route path="/register" element={user ? <Navigate to="/home" /> : <Register />} />
+    <Route path="/login" element={<Login />} />
+    <Route path="/register" element={<Register />} />
 
     <Route path="/get-started" element={
-      // <OnboardingRoute>
+       <OnboardingRoute>
         <GetStarted />
-      // </OnboardingRoute>
+      </OnboardingRoute>
     } />
 
     <Route path="*" element={<NotFound />} />

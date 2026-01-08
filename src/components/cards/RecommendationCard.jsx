@@ -5,6 +5,8 @@ import { useUser } from '../../context/UserContext'
 import QuickViewModal from '../ui/QuickViewModal'
 import { useNavigate } from 'react-router-dom'
 import { IoIosArrowDropleft,IoIosArrowDropright } from "react-icons/io";
+import { useWatchlist } from '../../context/WatchlistContext'
+
 
 
 
@@ -15,6 +17,7 @@ const RecommendationCard = () => {
   const [selectedMovie, setSelectedMovie] = useState(null)
   const navigate = useNavigate()
   const rowRef = useRef(null)
+  const { addToWatchlist } = useWatchlist()
 
   
   useEffect(() => {
@@ -102,7 +105,7 @@ const RecommendationCard = () => {
                   View Details
                 </button>
 
-                <button className="text-3xl text-[#FFC509] cursor-pointer hover:scale-110 transition">
+                <button onClick={() => addToWatchlist(movie)} className="text-3xl text-[#FFC509] cursor-pointer hover:scale-110 transition">
                   <GoPlusCircle />
                 </button>
               </div>

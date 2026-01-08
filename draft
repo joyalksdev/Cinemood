@@ -1,0 +1,567 @@
+import React, { useState } from "react"
+import LoginNavbar from "../components/layout/LoginNavbar"
+import Footer from "../components/layout/Footer"
+import { Link, useNavigate } from "react-router-dom"
+import { FcGoogle } from "react-icons/fc"
+import { useForm } from "react-hook-form"
+import { yupResolver } from "@hookform/resolvers/yup"
+import { registerSchema } from "../validations/authSchema"
+import { registerUser, googleLogin } from "../services/authService"
+import { useUser } from "../context/UserContext"
+import { saveUserProfile } from "../services/profileService"
+
+const Register = () => {
+  const navigate = useNavigate()
+  const { saveUser } = useUser()
+  const [loading, setLoading] = useState(false)
+  const [firebaseError, setFirebaseError] = useState("")
+
+  const { register, handleSubmit, formState:{ errors } } =
+    useForm({ resolver: yupResolver(registerSchema) })
+
+  const onSubmit = async (data) => {
+    if (loading) return
+    setLoading(true)
+    setFirebaseError("")
+
+    try {
+      const res = await registerUser(data.email, data.password)
+
+      saveUser({
+        uid: res.user.uid,
+        email: res.user.email,
+        onboarded: false
+      })
+
+      navigate("/get-started")
+    } catch (err) {
+      if (err.code === "auth/email-already-in-use") {
+        setFirebaseError("Email already registered. Please login.")
+      } else {
+        setFirebaseError("Registration failed. Try again.")
+      }
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleGoogle = async () => {
+  try {
+    const res = await googleLogin()
+
+    await saveUserProfile(res.user.uid, {
+      email: res.user.email,
+      onboarded: false,
+      createdAt: new Date()
+    })
+
+    saveUser({
+      uid: res.user.uid,
+      email: res.user.email,
+      onboarded: false
+    })
+
+    navigate("/get-started")
+
+  } catch (err) {
+    alert(err.message)
+  }
+}
+
+
+  return (
+    <>
+    <LoginNavbar showGetStarted={false}/>
+    <main className='h-screen flex justify-center mt-13 items-center'>
+
+          <section className='flex'>      
+            <form  onSubmit={handleSubmit(onSubmit)}  className='border rounded-2xl min-w-50 max-w-100 border-neutral-500 p-10 flex flex-col justify-center items-center'>
+                
+                <div className='mb-5 flex flex-col gap-3 '>
+                  <h2 className='text-center text-xl max-w-60 font-bold heading'>Create your CineMood account</h2>
+                <p className='text-[#aaaaaa] font-medium text-sm text-center'>Continue your movie journey</p>
+                </div>
+
+                <div className='flex flex-col gap-1'>
+                    <input type="email"{...register("email")} className='px-3 border border-neutral-700 py-2 rounded-lg outline-none focus:border-[#FFC509]' placeholder='Email'/>
+                    <p>{errors.email?.message}</p>
+
+                    <input type="password" {...register("password")} className='px-3 border border-neutral-700 py-2 rounded-lg outline-none focus:border-[#FFC509]' placeholder='Password'/>
+                    <p>{errors.password?.message}</p>
+                    
+                    <input type="password" {...register("confirmPassword")} className='px-3 border border-neutral-700 py-2 rounded-lg outline-none focus:border-[#FFC509]' placeholder='Confrim Password'/>
+                    <p>{errors.confirmPassword?.message}</p>
+                    
+                    {firebaseError && (
+                      <p className="text-red-400 text-sm mt-2">{firebaseError}</p>
+                    )}
+
+                    <button
+                    disabled={loading}
+                    className={`bg-[#FFC509] mt-3 px-3 py-2 font-semibold rounded-lg text-black
+                    ${loading ? "opacity-60 cursor-not-allowed" : "hover:bg-amber-300"}`}
+                  >
+                    {loading ? "Creating account..." : "Register"}
+                  </button>
+
+                </div>
+                <p className='mt-3'>Already have an account? <Link to='/login' className='underline hover:no-underline'>Login</Link></p>
+                  
+                  <span className='relative  border border-neutral-500 w-full mt-7'></span>
+                  <p className='relative -top-3.5 px-2 bg-[#1b1b1b]'>or</p>
+
+                 <div className='mt-3'>
+                  <button onClick={handleGoogle} className='py-2 px-5 flex items-center gap-2 border cursor-pointer border-neutral-500 rounded-lg  w-full bg-neutral-800'><FcGoogle size={23} />Continue with Google</button>
+                </div>
+
+            </form>
+          </section>
+
+
+
+    </main>
+    <Footer/>
+    </>
+  )
+}
+
+export default Register
+
+
+import React from "react"
+import LoginNavbar from "../components/layout/LoginNavbar"
+import Footer from "../components/layout/Footer"
+import { Link, useNavigate } from "react-router-dom"
+import { FcGoogle } from "react-icons/fc"
+import { useForm } from "react-hook-form"
+import { yupResolver } from "@hookform/resolvers/yup"
+import { loginSchema } from "../validations/authSchema"
+import { loginUser, googleLogin } from "../services/authService"
+import { useUser } from "../context/UserContext"
+import { getUserProfile } from "../services/profileService"
+
+
+const Login = () => {
+  const navigate = useNavigate()
+  const { saveUser } = useUser()
+
+  const { register, handleSubmit, formState:{ errors } } =
+    useForm({ resolver: yupResolver(loginSchema) })
+
+  const onSubmit = async (data) => {
+  try {
+    const res = await loginUser(data.email, data.password)
+
+    const profile = await getUserProfile(res.user.uid)
+
+    if (!profile) {
+      navigate("/get-started")
+      return
+    }
+
+    saveUser({
+      uid: res.user.uid,
+      email: res.user.email,
+      ...profile
+    })
+
+    navigate(profile.onboarded ? "/home" : "/get-started")
+
+  } catch (err) {
+    alert("Login failed: " + err.message)
+  }
+}
+
+
+  const handleGoogle = async () => {
+  try {
+    const res = await googleLogin()
+
+    const profile = await getUserProfile(res.user.uid)
+
+    if (!profile) {
+      navigate("/get-started")
+      return
+    }
+
+    saveUser({
+      uid: res.user.uid,
+      email: res.user.email,
+      ...profile
+    })
+
+    navigate(profile.onboarded ? "/home" : "/get-started")
+
+  } catch (err) {
+    alert("Google login failed: " + err.message)
+  }
+}
+
+
+  return (
+    <>
+    <LoginNavbar showGetStarted={false}/>
+    <main className='h-screen flex justify-center items-center'>
+      <form onSubmit={handleSubmit(onSubmit)}
+        className='border rounded-2xl bg-[#1b1b1b] p-10 flex flex-col items-center'>
+
+        <h2 className='text-xl font-bold mb-4'>Welcome back to CineMood 🎬</h2>
+
+        <input {...register("email")} placeholder="Email" className='input'/>
+        <p>{errors.email?.message}</p>
+
+        <input type="password" {...register("password")} placeholder="Password" className='input'/>
+        <p>{errors.password?.message}</p>
+
+        <button className='bg-[#FFC509] mt-3 px-3 py-2 rounded-lg text-black'>
+          Login
+        </button>
+
+        <p className='mt-3'>New here?
+          <Link to="/register" className="underline ml-1">Register</Link>
+        </p>
+
+        <button onClick={handleGoogle} type="button"
+          className='flex items-center gap-2 border mt-4 px-5 py-2 rounded-lg'>
+          <FcGoogle size={22}/> Continue with Google
+        </button>
+
+      </form>
+    </main>
+    <Footer/>
+    </>
+  )
+}
+
+export default Login
+
+
+firebase.js:
+
+import { initializeApp, getApps } from "firebase/app"
+import { getAuth, GoogleAuthProvider } from "firebase/auth"
+import { getFirestore } from "firebase/firestore"
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDvNc-Hvo0VAVw_sFTeigvzboX_NokPM8w",
+  authDomain: "cinemood-auth.firebaseapp.com",
+  projectId: "cinemood-auth",
+  storageBucket: "cinemood-auth.firebasestorage.app",
+  messagingSenderId: "908057905234",
+  appId: "1:908057905234:web:59ccd97acdde6f8731b78b"
+}
+
+const app = getApps().length === 0
+  ? initializeApp(firebaseConfig)
+  : getApps()[0]
+
+export const auth = getAuth(app)
+export const db = getFirestore(app)
+export const googleProvider = new GoogleAuthProvider()
+
+
+profileService.js:
+
+import { doc, setDoc, getDoc } from "firebase/firestore"
+import { db } from "../firebase/firebase"
+
+export const saveUserProfile = async (uid, data) => {
+  await setDoc(doc(db, "users", uid), data, { merge: true })
+}
+
+export const getUserProfile = async (uid) => {
+  try {
+    const snap = await getDoc(doc(db, "users", uid))
+    if (!snap.exists()) {
+      console.log("Profile not found yet — first login flow")
+      return null
+    }
+    return snap.data()
+  } catch (err) {
+    console.error("Error fetching user profile:", err)
+    return null
+  }
+}
+
+
+authService.js:
+
+import { auth, googleProvider } from "../firebase/firebase"
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signInWithPopup,
+  signOut
+} from "firebase/auth"
+import { saveUserProfile, getUserProfile } from "./profileService"
+
+export const registerUser = async (email, password) => {
+  const res = await createUserWithEmailAndPassword(auth, email, password)
+
+  // Create empty profile doc
+  await saveUserProfile(res.user.uid, {
+    email: res.user.email,
+    onboarded: false,
+    createdAt: new Date().toISOString()
+  })
+
+  return res.user
+}
+
+export const loginUser = async (email, password) => {
+  const res = await signInWithEmailAndPassword(auth, email, password)
+  const profile = await getUserProfile(res.user.uid)
+
+  return { user: res.user, profile }
+}
+
+export const googleLogin = async () => {
+  const res = await signInWithPopup(auth, googleProvider)
+
+  const profile = await getUserProfile(res.user.uid)
+
+  // First-time Google login
+  if (!profile) {
+    await saveUserProfile(res.user.uid, {
+      email: res.user.email,
+      onboarded: false,
+      createdAt: new Date().toISOString()
+    })
+  }
+
+  return res.user
+}
+
+export const logoutUser = () => signOut(auth)
+
+
+authSchema.js:
+
+import * as yup from "yup"
+
+export const loginSchema = yup.object({
+  email: yup
+    .string()
+    .email("Enter a valid email address")
+    .required("Email is required"),
+
+  password: yup
+    .string()
+    .min(6, "Password must be at least 6 characters")
+    .required("Password is required")
+})
+
+export const registerSchema = yup.object({
+  email: yup
+    .string()
+    .email("Enter a valid email address")
+    .required("Email is required"),
+
+  password: yup
+    .string()
+    .min(6, "Password must be at least 6 characters")
+    .required("Password is required"),
+
+  confirmPassword: yup
+    .string()
+    .oneOf([yup.ref("password")], "Passwords must match")
+    .required("Confirm password is required")
+})
+
+UserContext.jsx:
+
+import { createContext, useContext, useEffect, useState } from "react"
+import { getUserProfile } from "../services/profileService"
+
+const UserContext = createContext()
+
+export const UserProvider = ({ children }) => {
+  const [user, setUser] = useState(null)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+  const loadUser = async () => {
+    try {
+      const saved = localStorage.getItem("cinemood_user")
+
+      if (!saved) {
+        setLoading(false)
+        return
+      }
+
+      const authUser = JSON.parse(saved)
+
+      let profile = null
+      try {
+        profile = await getUserProfile(authUser.uid)
+      } catch (err) {
+        console.warn("Profile fetch failed — continuing without profile")
+      }
+
+      setUser(profile ? { ...authUser, ...profile } : authUser)
+    } catch (err) {
+      console.error("User load failed:", err)
+      localStorage.removeItem("cinemood_user")
+      setUser(null)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  loadUser()
+}, [])
+
+
+
+
+  const saveUser = (data) => {
+    setUser(data)
+    localStorage.setItem("cinemood_user", JSON.stringify(data))
+  }
+
+  const logout = () => {
+    localStorage.removeItem("cinemood_user")
+    setUser(null)
+  }
+
+  return (
+    <UserContext.Provider value={{ user, saveUser, logout, loading }}>
+      {children}
+    </UserContext.Provider>
+  )
+}
+
+export const useUser = () => useContext(UserContext)
+
+
+OnboardingRoute.jsx:
+
+import { Navigate } from "react-router-dom"
+import { useUser } from "../context/UserContext"
+
+const OnboardingRoute = ({ children }) => {
+  const { user, loading } = useUser()
+  if (loading) return null
+
+  if (!user) return <Navigate to="/login" />
+  if (user.onboarded) return <Navigate to="/home" />
+
+  return children
+}
+
+export default OnboardingRoute
+
+App.jsx:
+
+import { Routes, Route, Navigate } from 'react-router-dom'
+import RootLayout from './components/layout/RootLayout'
+import Home from './pages/Home'
+import MovieDetails from './pages/MovieDetails'
+import BrowseMovies from './pages/BrowseMovies'
+import Watchlist from './pages/Watchlist'
+import GetStarted from './pages/GetStarted'
+import ProtectedRoute from './routes/ProtectedRoute'
+import { useUser } from './context/UserContext'
+import Landing from './pages/Landing'
+import NotFound from './pages/NotFound'
+import Profile from './pages/Profile'
+import OnboardingRoute from "./routes/OnboardingRoute"
+import Login from './pages/Login'
+import Register from './pages/Register'
+
+
+
+const App = () => {
+  const { user, loading } = useUser()
+  if (loading) return null
+
+  return (
+   <Routes>
+
+    <Route path="/" element={user ? <Navigate to="/home" /> : <Landing />} />
+    <Route path="/login" element={user ? <Navigate to="/home" /> : <Login />} />
+    <Route path="/register" element={user ? <Navigate to="/home" /> : <Register />} />
+
+    <Route path="/get-started" element={
+       <OnboardingRoute>
+        <GetStarted />
+      </OnboardingRoute>
+    } />
+
+    <Route path="*" element={<NotFound />} />
+
+    <Route element={
+      <ProtectedRoute>
+        <RootLayout />
+      </ProtectedRoute>
+    }>
+      <Route path="/home" element={<Home />} />
+      <Route path="/browse" element={<BrowseMovies />} />
+      <Route path="/watchlist" element={<Watchlist />} />
+      <Route path="/movie/:id" element={<MovieDetails />} />
+      <Route path="/profile" element={<Profile />} />
+    </Route>
+
+  </Routes>
+
+  )
+}
+
+export default App
+
+main.jsx:
+import { Routes, Route, Navigate } from 'react-router-dom'
+import RootLayout from './components/layout/RootLayout'
+import Home from './pages/Home'
+import MovieDetails from './pages/MovieDetails'
+import BrowseMovies from './pages/BrowseMovies'
+import Watchlist from './pages/Watchlist'
+import GetStarted from './pages/GetStarted'
+import ProtectedRoute from './routes/ProtectedRoute'
+import { useUser } from './context/UserContext'
+import Landing from './pages/Landing'
+import NotFound from './pages/NotFound'
+import Profile from './pages/Profile'
+import OnboardingRoute from "./routes/OnboardingRoute"
+import Login from './pages/Login'
+import Register from './pages/Register'
+
+
+
+const App = () => {
+  const { user, loading } = useUser()
+  if (loading) return null
+
+  return (
+   <Routes>
+
+    <Route path="/" element={user ? <Navigate to="/home" /> : <Landing />} />
+    <Route path="/login" element={user ? <Navigate to="/home" /> : <Login />} />
+    <Route path="/register" element={user ? <Navigate to="/home" /> : <Register />} />
+
+    <Route path="/get-started" element={
+       <OnboardingRoute>
+        <GetStarted />
+      </OnboardingRoute>
+    } />
+
+    <Route path="*" element={<NotFound />} />
+
+    <Route element={
+      <ProtectedRoute>
+        <RootLayout />
+      </ProtectedRoute>
+    }>
+      <Route path="/home" element={<Home />} />
+      <Route path="/browse" element={<BrowseMovies />} />
+      <Route path="/watchlist" element={<Watchlist />} />
+      <Route path="/movie/:id" element={<MovieDetails />} />
+      <Route path="/profile" element={<Profile />} />
+    </Route>
+
+  </Routes>
+
+  )
+}
+
+export default App

@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom"
 import LoginNavbar from '../components/layout/LoginNavbar'
 import { useUser } from "../context/UserContext"
 import Stepper, {Step} from '../components/ui/Stepper'
+import { saveUserProfile } from "../services/profileService"
 
 
 const GENRES = [
@@ -25,11 +26,20 @@ const LANGUAGES = [
 
 
 const GetStarted = () => {
+  
   const navigate = useNavigate()
- const { user, saveUser } = useUser()
- const [name, setName] = useState("")
- const [genres, setGenres] = useState([])
- const [language, setLanguage] = useState("")
+  const { user, saveUser, loading } = useUser()
+  const [name, setName] = useState("")
+  const [genres, setGenres] = useState([])
+  const [language, setLanguage] = useState("")
+  
+  if (loading) return null
+
+  if (!user) {
+    navigate("/login")
+    return null
+  }
+  
  
   return (
 
@@ -42,23 +52,23 @@ const GetStarted = () => {
       onStepChange={(step) => {
         console.log(step);
       }}
-      onFinalStepCompleted={() => {
-      const newUser = {
-      id: Date.now(),
-      name,
-      genres,
-      avatar: "https://api.dicebear.com/7.x/micah/svg?seed=" + name,
-      language,
-      onboarded: true,
-      createdAt: new Date().toISOString()
-    }
-0
-    saveUser(newUser)
-    localStorage.setItem("cinemood_user", JSON.stringify(newUser))
+    onFinalStepCompleted={async () => {
 
-    navigate("/")
-}}
->
+      const profileData = {
+        name,
+        avatar: "https://api.dicebear.com/7.x/micah/svg?seed=" + name,
+        genres,
+        language,
+        onboarded: true,
+        createdAt: new Date().toISOString()
+      }
+
+      await saveUserProfile(user.uid, profileData)
+
+      saveUser({ ...user, ...profileData })
+
+      navigate("/home")
+    }}>
 
       <Step>
         <h2 className="heading font-bold text-2xl mb-2">Welcome to CineMood 🎬</h2>

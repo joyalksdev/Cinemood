@@ -7,13 +7,15 @@ import { UserProvider } from "./context/UserContext";
 import { WatchlistProvider } from "./context/WatchlistContext";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
+
   <React.StrictMode>
     <BrowserRouter>
-      <WatchlistProvider>
-        <UserProvider>
+      <UserProvider>
+        <WatchlistProvider>
           <App />
-        </UserProvider>
-      </WatchlistProvider>
+        </WatchlistProvider>
+      </UserProvider>
     </BrowserRouter>
   </React.StrictMode>
-);
+)
+
