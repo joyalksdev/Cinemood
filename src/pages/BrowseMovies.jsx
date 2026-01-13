@@ -40,7 +40,7 @@ const BrowseMovies = () => {
     setHasMore(true)
   }, [filters])
 
-  // Infinite Scroll Observer
+  // Infinite Scroll 
   useEffect(() => {
     if (!loaderRef.current || !hasMore) return
 
@@ -54,6 +54,7 @@ const BrowseMovies = () => {
     return () => observer.disconnect()
   }, [loading, hasMore])
 
+
   return (
     <div className="md:px-6">
 
@@ -66,7 +67,7 @@ const BrowseMovies = () => {
         <FilterBar filters={filters} setFilters={setFilters} />
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 p-6">
+      <div className="grid grid-cols-3 md:grid-cols-3 lg:grid-cols-5 gap-4 p-6">
         {movies.map(movie => (
           <div key={movie.id}
             onClick={() => setSelectedMovie(movie)}
@@ -87,11 +88,10 @@ const BrowseMovies = () => {
           </div>
         ))}
 
-        {/* Skeleton Loaders */}
         {loading && [...Array(6)].map((_, i) => <CardSkelton key={i} />)}
       </div>
 
-      {/* Scroll Trigger */}
+
       {hasMore && (
         <div ref={loaderRef} className="flex justify-center py-10">
           <FadeLoader color="#FFC509" />

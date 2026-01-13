@@ -1,40 +1,34 @@
-import React, { useEffect, useRef, useState } from 'react'
-import QuickViewModal from '../modals/QuickViewModal'
-import { fetchTrendingMovies } from '../../services/tmbdApi'
-import { ChevronLeft, ChevronRight } from "lucide-react"
-import { GoPlusCircle } from "react-icons/go"
-import { useWatchlist } from '../../context/WatchlistContext';
-import WatchlistButton from "../ui/WatchlistButton"
-import userPlaceholder from "../../assets/user-placeholder.png"
-import moviePlaceholder from "../../assets/m-placeholder.png"
+import React, { useEffect, useRef, useState } from "react";
+import QuickViewModal from "../modals/QuickViewModal";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useWatchlist } from "../../context/WatchlistContext";
+import WatchlistButton from "../ui/WatchlistButton";
+import moviePlaceholder from "../../assets/m-placeholder.png";
+import CardSkelton from "./CardSkelton";
 
+const MovieRow = ({ title, fetchFn }) => {
+  const [movies, setMovies] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [selectedMovie, setSelectedMovie] = useState(null);
+  const { addToWatchlist } = useWatchlist();
 
+  useEffect(() => {
+    setLoading(true);
+    fetchFn().then((data) => {
+      setMovies(data);
+      setLoading(false);
+    });
+  }, [fetchFn]);
 
-const MovieRow = ({title, fetchFn}) => {
-    const [movies, setMovies] = useState([])
-    const [loading, setLoading] = useState(true)
-    const [selectedMovie, setSelectedMovie] = useState(null)
-    const {addToWatchlist} = useWatchlist()
-    
+  const rowRef = useRef(null);
 
-    useEffect(()=>{
-        setLoading(true)
-        fetchFn().then(data=>{
-            setMovies(data)
-            setLoading(false)
-        })
-    }, [fetchFn])
-
-    const rowRef = useRef(null)
-
-    const scroll = (direction) => {
-    const width = rowRef.current.clientWidth
+  const scroll = (direction) => {
+    const width = rowRef.current.clientWidth;
     rowRef.current.scrollBy({
-        left: direction === "left" ? -width : width,
-        behavior: "smooth"
-    })
-    }
-
+      left: direction === "left" ? -width : width,
+      behavior: "smooth",
+    });
+  };
 
   return (
     <section>
@@ -55,7 +49,10 @@ const MovieRow = ({title, fetchFn}) => {
             rounded-full bg-black/40 backdrop-blur-md hover:bg-[#FFC509] 
             transition-all duration-200"
           >
-            <ChevronLeft className="text-white group-hover:text-black" size={26} />
+            <ChevronLeft
+              className="text-white group-hover:text-black"
+              size={26}
+            />
           </button>
 
           <button
@@ -64,55 +61,69 @@ const MovieRow = ({title, fetchFn}) => {
             rounded-full bg-black/40 backdrop-blur-md hover:bg-[#FFC509] 
             transition-all duration-200"
           >
-            <ChevronRight className="text-white group-hover:text-black" size={26} />
+            <ChevronRight
+              className="text-white group-hover:text-black"
+              size={26}
+            />
           </button>
         </div>
       </div>
 
-      <div ref={rowRef} className="flex gap-2 md:gap-6 overflow-x-auto scrollbar-hide px-1 md:px-6 py-4">
-        
-        {!loading && movies.length === 0 && (
-        
-        <p className="text-neutral-400 px-4">No movies found</p>
-        )}
+      <div
+  ref={rowRef}
+  className="flex gap-3 md:gap-6 overflow-x-auto scrollbar-hide px-2 md:px-6 py-4"
+>
+  {loading &&
+    [...Array(6)].map((_, i) => <CardSkelton key={i} />)}
 
+  {!loading && movies.length === 0 && (
+    <p className="text-neutral-400 px-4">No movies found</p>
+  )}
 
-        {movies.map((movie) => (
-          <div
-            key={movie.id}
-            className="relative min-w-[120px] md:min-w-[250px] max-w-[200px] md:max-w-[490px] bg-zinc-900 border border-gray-500/40 rounded-xl overflow-hidden hover:scale-105 transition-transform duration-300"
-          >
-            <img
-              src={movie.poster_path ? `https://image.tmdb.org/t/p/w500${movie.poster_path}` : moviePlaceholder}
-              className="w-full h-[180px] md:h-[320px] object-cover"
-              alt={movie.title}
-            />
+  {!loading &&
+    movies.map((movie) => (
+      <div
+        key={movie.id}
+        className="relative min-w-[120px] sm:min-w-[160px] md:min-w-[250px]
+        max-w-[120px] sm:max-w-[160px] md:max-w-[250px]
+        bg-zinc-900 border border-gray-500/40 rounded-xl overflow-hidden
+        hover:scale-105 transition-transform duration-300">
 
-            <div className="p-4 hidden md:block">
-              <h3 className="text-white text-sm font-semibold truncate">
-                {movie.title}
-              </h3>
-              <p className="text-xs text-gray-400">
-                ⭐ {movie.vote_average.toFixed(1)}
-              </p>
+              <img
+                src={
+                  movie.poster_path
+                    ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
+                    : moviePlaceholder
+                }
+                className="w-full h-[180px] md:h-[320px] object-cover"
+                onClick={() => setSelectedMovie(movie)}
+                alt={movie.title}
+              />
 
-              <div className="flex justify-between pt-2">
-                <button
-                  onClick={() => setSelectedMovie(movie)}
-                  className="text-md px-7 py-1 rounded-2xl  cursor-pointer bg-[#FFC509] hover:bg-amber-300 font-medium text-black"
-                >
-                  View Details
-                </button>
+              <div className="p-4 hidden md:block">
+                <h3 className="text-white text-sm font-semibold truncate">
+                  {movie.title}
+                </h3>
+                <p className="text-xs text-gray-400">
+                  ⭐ {movie.vote_average.toFixed(1)}
+                </p>
 
-                <WatchlistButton movie={movie} variant="card" />
+                <div className="flex justify-between pt-2">
+                  <button
+                    onClick={() => setSelectedMovie(movie)}
+                    className="text-md px-7 py-1 rounded-2xl bg-[#FFC509] hover:bg-amber-300 font-medium text-black"
+                  >
+                    View Details
+                  </button>
 
+                  <WatchlistButton movie={movie} variant="card" />
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))}
       </div>
     </section>
-  )
-}
+  );
+};
 
-export default MovieRow
+export default MovieRow;

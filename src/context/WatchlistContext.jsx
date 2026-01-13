@@ -2,6 +2,8 @@ import { createContext, useContext, useEffect, useState, useRef } from "react"
 import { doc, setDoc, getDoc } from "firebase/firestore"
 import { db } from "../firebase/firebase"
 import { useUser } from "./UserContext"
+import { FadeLoader } from "react-spinners"
+
 
 const WatchlistContext = createContext()
 
@@ -9,6 +11,8 @@ export const WatchlistProvider = ({ children }) => {
   const { user } = useUser()
   const [watchlist, setWatchlist] = useState([])
   const isLoaded = useRef(false)
+  const [loading, setLoading] = useState(true)
+
 
   // When user logs out, clear everything instantly
   useEffect(() => {
@@ -20,6 +24,7 @@ export const WatchlistProvider = ({ children }) => {
 
   const loadWatchlist = async () => {
     isLoaded.current = false
+    setLoading(true)
 
     const ref = doc(db, "watchlists", user.uid)
     const snap = await getDoc(ref)
@@ -32,6 +37,7 @@ export const WatchlistProvider = ({ children }) => {
     }
 
     isLoaded.current = true
+     setLoading(false)
   }
 
   loadWatchlist()
@@ -57,7 +63,7 @@ export const WatchlistProvider = ({ children }) => {
   }
 
   return (
-    <WatchlistContext.Provider value={{ watchlist, addToWatchlist, removeFromWatchlist }}>
+    <WatchlistContext.Provider value={{ watchlist, addToWatchlist, removeFromWatchlist, loading }}>
       {children}
     </WatchlistContext.Provider>
   )

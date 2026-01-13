@@ -1,10 +1,25 @@
 import { useWatchlist } from "../context/WatchlistContext"
 import QuickViewModal from "../components/ui/QuickViewModal"
 import { useState } from "react"
+import FadeLoader from "react-spinners/FadeLoader"
 
 const Watchlist = () => {
-  const { watchlist, removeFromWatchlist } = useWatchlist()
+  const { watchlist, removeFromWatchlist, loading } = useWatchlist()
   const [selectedMovie, setSelectedMovie] = useState(null)
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-[60vh]">
+        <FadeLoader
+          color="#FFC509"
+          radius={-5}
+          speedMultiplier={1}
+          width={4}
+          loading
+        />
+      </div>
+    )
+  }
 
   return (
     <div className="px-8 py-6">
