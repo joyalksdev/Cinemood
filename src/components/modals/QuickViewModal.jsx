@@ -2,11 +2,15 @@ import { useEffect, useRef } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { TbMovie } from "react-icons/tb"
 import { useNavigate } from "react-router-dom"
-import WatchlistButton from "./WatchlistButton"
+import WatchlistButton from "../ui/WatchlistButton"
+import mHPlaceholder from "../../assets/m-h-placeholder.png"
 
 const QuickViewModal = ({ movie, onClose }) => {
   const modalRef = useRef()
   const navigate = useNavigate()
+
+
+  const backdrop = movie.backdrop_path?.trim()
 
   useEffect(() => {
     const handler = (e) => {
@@ -17,11 +21,6 @@ const QuickViewModal = ({ movie, onClose }) => {
     document.addEventListener("mousedown", handler)
     return () => document.removeEventListener("mousedown", handler)
   }, [onClose])
-
-  const handleViewDetails = () => {
-  onClose()                
-  navigate(`/movie/${movie.id}`) 
-}
 
   return (
     <AnimatePresence>
@@ -41,7 +40,7 @@ const QuickViewModal = ({ movie, onClose }) => {
             className="bg-zinc-900/90 backdrop-blur-xl text-white w-[92%] max-w-200 
             rounded-3xl shadow-2xl overflow-hidden border border-white/10"
           >
-            {/* Close Button */}
+       
             <button
               onClick={onClose}
               className="absolute right-4 top-4 w-9 h-9 flex items-center justify-center 
@@ -51,10 +50,11 @@ const QuickViewModal = ({ movie, onClose }) => {
               ✕
             </button>
 
-            {/* Hero Backdrop */}
+         
             <div className="relative h-[280px] md:h-[340px]">
-              <img
-                src={`https://image.tmdb.org/t/p/original${movie.backdrop_path}`}
+             <img src={backdrop 
+                  ? `https://image.tmdb.org/t/p/original${backdrop}` 
+                  : mHPlaceholder}
                 className="w-full h-full object-cover"
               />
               <div className="absolute inset-0 bg-linear-to-t from-black via-black/40 to-transparent" />
@@ -73,7 +73,7 @@ const QuickViewModal = ({ movie, onClose }) => {
               </div>
             </div>
 
-            {/* Content */}
+
             <div className="p-6">
               <p className="text-sm leading-relaxed text-neutral-300 line-clamp-4">
                 {movie.overview}
@@ -81,7 +81,7 @@ const QuickViewModal = ({ movie, onClose }) => {
 
               <div className="flex flex-wrap gap-3 mt-6">
                 <button
-                  onClick={handleViewDetails}
+                  onClick={() => navigate(`/movie/${movie.id}`)}
                   className="px-6 py-2.5 flex gap-2 items-center bg-yellow-400 
                   rounded-lg hover:bg-yellow-300 transition font-semibold text-black shadow-md"
                 >

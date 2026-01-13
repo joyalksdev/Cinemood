@@ -6,6 +6,7 @@ import DropDownProfile from '../ui/DropDownProfile'
 import { useUser } from '../../context/UserContext'
 import SearchBar from '../search/SearchBar'
 
+
 const Navbar = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -50,6 +51,7 @@ const Navbar = () => {
           </div>
         )}
       </nav>
+      
 
 
       <div className={`fixed inset-0 z-40 bg-black/95 backdrop-blur-md flex flex-col items-center justify-center gap-8 text-xl transition-all duration-300

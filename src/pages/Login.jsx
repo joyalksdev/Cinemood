@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useState } from "react"
 import LoginNavbar from "../components/layout/LoginNavbar"
 import Footer from "../components/layout/Footer"
 import { Link, useNavigate } from "react-router-dom"
@@ -9,17 +9,23 @@ import { loginSchema } from "../validations/authSchema"
 import { loginUser, googleLogin } from "../services/authService"
 import { useUser } from "../context/UserContext"
 import { getUserProfile } from "../services/profileService"
+import { FadeLoader } from 'react-spinners'
+import toast from "react-hot-toast"
+
+
 
 
 const Login = () => {
   const navigate = useNavigate()
   const { saveUser } = useUser()
+  const [loading, setLoading] = useState(false)
 
   const { register, handleSubmit, formState:{ errors } } =
     useForm({ resolver: yupResolver(loginSchema) })
 
   const onSubmit = async (data) => {
   try {
+    setLoading(true)
     const res = await loginUser(data.email, data.password)
 
     const userData = {
@@ -33,7 +39,11 @@ const Login = () => {
     navigate(res.profile?.onboarded ? "/home" : "/get-started")
 
   } catch (err) {
-    alert("Login failed: " + err.message)
+
+    toast.error("Login failed: " + err.message)
+
+}finally{
+    setLoading(false)
   }
 }
 
@@ -53,13 +63,23 @@ const handleGoogle = async () => {
   return (
     <>
       <LoginNavbar showGetStarted={false} />
-      <main className="h-screen flex justify-center items-center">
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          className="border rounded-2xl border-neutral-500 bg-[#1b1b1b] p-10 flex flex-col justify-center items-center"
-        >
-          <div className="mb-5 flex flex-col gap-3 ">
-            <h2 className="text-center text-xl max-w-60 font-bold heading">
+      <main className="min-h-screen flex justify-center items-center px-4 sm:px-6 my-10">
+        {loading ? (
+        <div className="flex flex-col items-center justify-center p-10">
+          <FadeLoader
+            className="mx-auto mb-5"
+            color="#FFC509"
+            radius={-5}
+            speedMultiplier={1}
+            width={4}
+            loading
+          />
+          <p className="text-neutral-400 text-sm">Signing you in...</p>
+        </div>
+      ) : (
+        <form onSubmit={handleSubmit(onSubmit)} className="w-full max-w-sm sm:max-w-md border rounded-2xl border-neutral-500 bg-[#1b1b1b] p-6 sm:p-10 flex flex-col items-center">
+                <div className="mb-5 flex flex-col gap-3 ">
+           <h2 className="text-center text-xl sm:text-xl md:text-2xl max-w-xs font-bold heading">
               Welcome back to <br /> CineMood 🎬
             </h2>
             <p className="text-neutral-300 font-medium">
@@ -67,13 +87,13 @@ const handleGoogle = async () => {
             </p>
           </div>
 
-          <div className="flex flex-col gap-3">
+          <div className="flex flex-col w-full max-w-70 gap-3 ">
             <input
               {...register("email")}
-              className="px-3 border border-neutral-700 py-2 rounded-lg outline-none focus:border-[#FFC509]"
+              className="px-3 border border-neutral-700 py-2  rounded-lg outline-none focus:border-[#FFC509]"
               placeholder="Email"
             />
-            <p>{errors.email?.message}</p>
+            <p className="text-red-400 text-sm">{errors.email?.message}</p>
 
             <input
               type="password"
@@ -81,7 +101,7 @@ const handleGoogle = async () => {
               className="px-3 border border-neutral-700 py-2 rounded-lg outline-none focus:border-[#FFC509]"
               placeholder="Password"
             />
-            <p>{errors.password?.message}</p>
+            <p className="text-red-400 text-sm" >{errors.password?.message}</p>
 
             <div className="flex items-center gap-1">
               <input type="checkbox" id="" />
@@ -98,19 +118,19 @@ const handleGoogle = async () => {
             </Link>
           </p>
 
-          <span className="relative  border border-neutral-500 w-full mt-7"></span>
+          <span className="relative  border border-neutral-500 w-full max-w-70 mt-7"></span>
           <p className="relative -top-3.5 px-2 bg-[#1b1b1b]">or</p>
 
           <div className="mt-3">
             <button
               onClick={handleGoogle}
-              className="py-2 px-5 flex items-center gap-2 border border-neutral-500 rounded-lg  w-full bg-neutral-800"
+              className="py-2 px-5 flex items-center gap-2 border cursor-pointer hover:bg-neutral-800/70 transition ease-in border-neutral-500 rounded-lg  w-full bg-neutral-800"
             >
               <FcGoogle size={23} />
               Continue with Google
             </button>
           </div>
-        </form>
+        </form>)}
       </main>
       <Footer />
     </>

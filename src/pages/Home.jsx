@@ -3,7 +3,7 @@ import { useUser } from '../context/UserContext'
 import RecommendationCard from '../components/cards/RecommendationCard'
 import MovieRow from '../components/cards/MovieRow'
 import { fetchTrendingMovies, fetchTopRatedMovies, fetchNowPlayingMovies, fetchPopularAnime,fetchPopularMovies, fetchPopularKDramas  } from '../services/tmbdApi'
-
+import MoodMatcher from '../components/sections/MoodMatcher'
 
 
 const Home = () => {
@@ -25,6 +25,8 @@ const Home = () => {
         <MovieRow title="🔥 Trending Movies" fetchFn={fetchTrendingMovies} /> 
 
         <MovieRow title="🏆 Top 20 Movies" fetchFn={fetchTopRatedMovies} />
+
+        <MoodMatcher />
 
         <MovieRow title="🎬 Latest Movies" fetchFn={fetchNowPlayingMovies} />
 

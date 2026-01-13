@@ -26,6 +26,7 @@ export const loginUser = async (email, password) => {
 
   return { user: res.user, profile }
 }
+
 export const googleLogin = async () => {
   const res = await signInWithPopup(auth, googleProvider)
 

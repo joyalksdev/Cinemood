@@ -1,9 +1,14 @@
 import React, { useEffect, useRef, useState } from 'react'
-import QuickViewModal from '../ui/QuickViewModal'
+import QuickViewModal from '../modals/QuickViewModal'
 import { fetchTrendingMovies } from '../../services/tmbdApi'
-import { IoIosArrowDropleft,IoIosArrowDropright } from "react-icons/io";
+import { ChevronLeft, ChevronRight } from "lucide-react"
 import { GoPlusCircle } from "react-icons/go"
 import { useWatchlist } from '../../context/WatchlistContext';
+import WatchlistButton from "../ui/WatchlistButton"
+import userPlaceholder from "../../assets/user-placeholder.png"
+import moviePlaceholder from "../../assets/m-placeholder.png"
+
+
 
 const MovieRow = ({title, fetchFn}) => {
     const [movies, setMovies] = useState([])
@@ -41,25 +46,30 @@ const MovieRow = ({title, fetchFn}) => {
       )}
 
       <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold">{title}</h2>
+        <h2 className="font-bold heading text-xl md:text-2xl">{title}</h2>
 
-        <div className="flex gap-3">
+        <div className="hidden lg:flex gap-3">
           <button
             onClick={() => scroll("left")}
-            className="hover:text-amber-300 focus:text-amber-300"
+            className="group flex items-center justify-center w-10 h-10 
+            rounded-full bg-black/40 backdrop-blur-md hover:bg-[#FFC509] 
+            transition-all duration-200"
           >
-            <IoIosArrowDropleft size={40} />
+            <ChevronLeft className="text-white group-hover:text-black" size={26} />
           </button>
+
           <button
             onClick={() => scroll("right")}
-            className="hover:text-amber-300 focus:text-amber-300"
+            className="group flex items-center justify-center w-10 h-10 
+            rounded-full bg-black/40 backdrop-blur-md hover:bg-[#FFC509] 
+            transition-all duration-200"
           >
-            <IoIosArrowDropright size={40} />
+            <ChevronRight className="text-white group-hover:text-black" size={26} />
           </button>
         </div>
       </div>
 
-      <div ref={rowRef} className="flex gap-5 overflow-x-auto scrollbar-hide px-6 py-4">
+      <div ref={rowRef} className="flex gap-2 md:gap-6 overflow-x-auto scrollbar-hide px-1 md:px-6 py-4">
         
         {!loading && movies.length === 0 && (
         
@@ -70,18 +80,15 @@ const MovieRow = ({title, fetchFn}) => {
         {movies.map((movie) => (
           <div
             key={movie.id}
-            className="group relative min-w-[220px] md:min-w-[220px] min-h-[300px]
-             rounded-xl overflow-hidden bg-neutral-900/40
-             border border-white/10 shadow-lg
-             hover:scale-105 transition-all duration-300 cursor-pointer"
+            className="relative min-w-[120px] md:min-w-[250px] max-w-[200px] md:max-w-[490px] bg-zinc-900 border border-gray-500/40 rounded-xl overflow-hidden hover:scale-105 transition-transform duration-300"
           >
             <img
-              src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-              className="w-full h-[320px] object-cover"
+              src={movie.poster_path ? `https://image.tmdb.org/t/p/w500${movie.poster_path}` : moviePlaceholder}
+              className="w-full h-[180px] md:h-[320px] object-cover"
               alt={movie.title}
             />
 
-            <div className="p-4">
+            <div className="p-4 hidden md:block">
               <h3 className="text-white text-sm font-semibold truncate">
                 {movie.title}
               </h3>
@@ -97,9 +104,8 @@ const MovieRow = ({title, fetchFn}) => {
                   View Details
                 </button>
 
-                <button onClick={()=> addToWatchlist(movie)} className="text-3xl text-[#FFC509] cursor-pointer hover:scale-110 transition">
-                  <GoPlusCircle />
-                </button>
+                <WatchlistButton movie={movie} variant="card" />
+
               </div>
             </div>
           </div>

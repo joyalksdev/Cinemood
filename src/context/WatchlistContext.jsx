@@ -10,27 +10,36 @@ export const WatchlistProvider = ({ children }) => {
   const [watchlist, setWatchlist] = useState([])
   const isLoaded = useRef(false)
 
-  // 🔥 LOAD FROM FIRESTORE
+  // When user logs out, clear everything instantly
   useEffect(() => {
-    if (!user) return
-
-    const loadWatchlist = async () => {
-      const snap = await getDoc(doc(db, "watchlists", user.uid))
-
-      if (snap.exists()) {
-        setWatchlist(snap.data().movies || [])
-      } else {
-        await setDoc(doc(db, "watchlists", user.uid), { movies: [] })
-        setWatchlist([])
-      }
-
-      isLoaded.current = true
+    if (!user) {
+      setWatchlist([])
+      isLoaded.current = false
+      return
     }
 
-    loadWatchlist()
-  }, [user])
+  const loadWatchlist = async () => {
+    isLoaded.current = false
 
-  // 🔥 SAVE TO FIRESTORE ONLY AFTER LOAD
+    const ref = doc(db, "watchlists", user.uid)
+    const snap = await getDoc(ref)
+
+    if (snap.exists()) {
+      setWatchlist(snap.data().movies || [])
+    } else {
+      await setDoc(ref, { movies: [] })
+      setWatchlist([])
+    }
+
+    isLoaded.current = true
+  }
+
+  loadWatchlist()
+}, [user])
+
+
+  // Save to firestore only after load
+
   useEffect(() => {
     if (!user || !isLoaded.current) return
 

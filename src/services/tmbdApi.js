@@ -22,6 +22,27 @@ export const fetchPersonalizedMovies = async (genres = [], language = "en") => {
   return data.results
 }
 
+export const fetchBrowseMovies = async (filters) => {
+
+  let sortBy = "release_date.desc"
+
+  if (filters.sort === "old") sortBy = "release_date.asc"
+  if (filters.sort === "rating") sortBy = "vote_average.desc"
+
+  const res = await fetch(
+    `${BASE_URL}/discover/movie?` +
+    `with_genres=${filters.genre}` +
+    `&with_original_language=${filters.language}` +
+    `&sort_by=${sortBy}` +
+    `&page=${filters.page}`,
+    { headers } 
+  )
+
+  const data = await res.json()
+  return data.results
+}
+
+
 export const fetchTopRatedMovies = async () => {
   const res = await fetch(`${BASE_URL}/movie/top_rated`, { headers })
   return (await res.json()).results
@@ -77,6 +98,29 @@ export const searchMovies = async (query) => {
   return data.results;
 };
 
+export const searchPeople = async (query) => {
+  const res = await fetch(
+    `${BASE_URL}/search/person?query=${query}&include_adult=false`,
+    { headers }
+  )
+  const data = await res.json()
+  return data.results
+}
+
+export const searchMulti = async (query) => {
+  const res = await fetch(
+    `${BASE_URL}/search/multi?query=${encodeURIComponent(query)}&include_adult=false`,
+    { headers }
+  )
+
+  const data = await res.json()
+
+  return data.results.filter(
+    item => item.media_type === "movie" || item.media_type === "person"
+  )
+}
+
+
 export const fetchMovieDetails = async (id) => {
   const res = await fetch(
     `${BASE_URL}/movie/${id}?append_to_response=credits,videos`,
@@ -85,8 +129,53 @@ export const fetchMovieDetails = async (id) => {
   return await res.json();
 };
 
+export const fetchPersonDetails = async (id) => {
+  const res = await fetch(
+    `${BASE_URL}/person/${id}?append_to_response=movie_credits,external_ids`,
+    { headers }
+  )
+  return await res.json()
+}
+
 export const fetchSimilarMovies = async (id) => {
   const res = await fetch(`${BASE_URL}/movie/${id}/similar`, { headers });
   const data = await res.json();
   return data.results;
 };
+
+export const fetchMovieCredits = async (id) => {
+  const res = await fetch(
+    `${BASE_URL}/movie/${id}/credits`,
+    { headers }
+  )
+  const data = await res.json()
+  return data
+}
+
+export const fetchMovieReviews = async (id, page = 1) => {
+  const res = await fetch(
+    `${BASE_URL}/movie/${id}/reviews?page=${page}`,
+    { headers }
+  )
+  const data = await res.json()
+  return data
+}
+
+export const discoverByGenre = async (genres, page = 1) => {
+  const res = await fetch(
+    `${BASE_URL}/discover/movie?with_genres=${genres}&sort_by=popularity.desc&page=${page}`,
+    { headers }
+  )
+  const data = await res.json()
+  return data.results || []
+}
+
+export const searchByMoodKeyword = async (keyword, page = 1) => {
+  const res = await fetch(
+    `${BASE_URL}/search/movie?query=${encodeURIComponent(keyword)}&page=${page}`,
+    { headers }
+  )
+  const data = await res.json()
+  return data.results || []
+}
+

@@ -2,11 +2,13 @@ import React, { useEffect, useRef, useState } from 'react'
 import { fetchPersonalizedMovies } from '../../services/tmbdApi'
 import { GoPlusCircle } from "react-icons/go"
 import { useUser } from '../../context/UserContext'
-import QuickViewModal from '../ui/QuickViewModal'
+import QuickViewModal from '../modals/QuickViewModal'
 import { useNavigate } from 'react-router-dom'
-import { IoIosArrowDropleft,IoIosArrowDropright } from "react-icons/io";
+import { ChevronLeft, ChevronRight } from "lucide-react"
 import { useWatchlist } from '../../context/WatchlistContext'
-
+import WatchlistButton from "../ui/WatchlistButton"
+import userPlaceholder from "../../assets/user-placeholder.png"
+import moviePlaceholder from "../../assets/m-placeholder.png"
 
 
 
@@ -48,48 +50,55 @@ const RecommendationCard = () => {
 
       <div className="flex justify-between items-center">
         <div>
-          <h2 className='font-bold heading text-center sm:text-left text-2xl'>🎯 Recommended for You</h2>
-          <p className='p-1 font-medium text-neutral-200/50'>Movies selected based on what you love.</p>
+          <h2 className='font-bold heading text-xl md:text-2xl'>🎯 Recommended for You</h2>
+          <p className='p-1 font-medium text-neutral-200/50 text-sm'>Movies selected based on what you love.</p>
         </div>
 
-        <div className="flex gap-3">
-          <button
+        <div className="hidden md:flex gap-3">
+         <button
             onClick={() => scroll("left")}
-            className="hover:text-amber-300 focus:text-amber-300"
+            className="group flex items-center justify-center w-10 h-10 
+            rounded-full bg-black/40 backdrop-blur-md hover:bg-[#FFC509] 
+            transition-all duration-200"
           >
-            <IoIosArrowDropleft size={40} />
+            <ChevronLeft className="text-white group-hover:text-black" size={26} />
           </button>
+
           <button
             onClick={() => scroll("right")}
-            className="hover:text-amber-300 focus:text-amber-300"
+            className="group flex items-center justify-center w-10 h-10 
+            rounded-full bg-black/40 backdrop-blur-md hover:bg-[#FFC509] 
+            transition-all duration-200"
           >
-            <IoIosArrowDropright size={40} />
+            <ChevronRight className="text-white group-hover:text-black" size={26} />
           </button>
+
         </div>
+        
       </div>
 
       <div
         ref={rowRef}
-        className="flex gap-5 overflow-x-auto scrollbar-hide px-6 py-4"
+        className="flex gap-2 md:gap-6 overflow-x-auto scrollbar-hide px-1 md:px-6 py-4"
       >
         {movies.length === 0 && (
           <p className="text-neutral-400 px-4">
             Select genres during onboarding to get personalized recommendations.
           </p>
         )}
+{/*  onClick={() => setSelectedMovie(movie)} */}
 
         {movies.map((movie) => (
-          <div
+          <div 
             key={movie.id}
-            className="relative min-w-[240px] max-w-[240px] bg-zinc-900 border border-gray-500/40 rounded-xl overflow-hidden hover:scale-105 transition-transform duration-300"
+            className="relative min-w-[120px] md:min-w-[250px] max-w-[200px] md:max-w-[490px] bg-zinc-900 border border-gray-500/40 rounded-xl overflow-hidden hover:scale-105 transition-transform duration-300"
           >
-            <img
-              src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-              className="w-full h-[320px] object-cover"
+           <img src={movie.poster_path ? `https://image.tmdb.org/t/p/w500${movie.poster_path}` : moviePlaceholder}
+              className="w-full h-[180px] md:h-[320px] object-cover"
               alt={movie.title}
-            />
+              />
 
-            <div className="p-4">
+            <div className="p-4 hidden md:block">
               <h3 className="text-white text-sm font-semibold truncate">
                 {movie.title}
               </h3>
@@ -105,9 +114,8 @@ const RecommendationCard = () => {
                   View Details
                 </button>
 
-                <button onClick={() => addToWatchlist(movie)} className="text-3xl text-[#FFC509] cursor-pointer hover:scale-110 transition">
-                  <GoPlusCircle />
-                </button>
+                <WatchlistButton movie={movie} variant="card" />
+
               </div>
             </div>
           </div>

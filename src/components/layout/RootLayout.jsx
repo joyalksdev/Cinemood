@@ -12,7 +12,7 @@ const RootLayout = () => {
 
         <div className="relative z-10">
             <Navbar />
-            <main className='px-6 pt-24 min-h-screen'>
+            <main className='px-0 lg:px-6 pt-24 min-h-screen'>
                 <Outlet />
             </main>
             <Footer />
