@@ -13,7 +13,7 @@ const Home = () => {
 
   return (
     <div className='px-5'>
-      <div className=' hidden flex-col justify-center items-center py-5'>
+      <div className='flex flex-col justify-center items-center py-5'>
         <h2 className='text-4xl heading font-medium text-center'>Welcome back,<span className='font-bold pl-2'> {user.name}</span>👋</h2>
         <p className='p-2 text-lg text-center'>Ready to find your next favorite movie?</p>
         <p className='text-amber-200 text-center'>Your mood. Your movies. Your CineMood.</p>

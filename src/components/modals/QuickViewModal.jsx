@@ -1,26 +1,27 @@
-import { useEffect, useRef } from "react"
-import { motion, AnimatePresence } from "framer-motion"
-import { TbMovie } from "react-icons/tb"
-import { useNavigate } from "react-router-dom"
-import WatchlistButton from "../ui/WatchlistButton"
-import mHPlaceholder from "../../assets/m-h-placeholder.png"
+import { useEffect, useRef, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { TbMovie } from "react-icons/tb";
+import { useNavigate } from "react-router-dom";
+import WatchlistButton from "../ui/WatchlistButton";
+import mHPlaceholder from "../../assets/m-h-placeholder.png";
+import ReviewModal from "./ReviewModal";
 
 const QuickViewModal = ({ movie, onClose }) => {
-  const modalRef = useRef()
-  const navigate = useNavigate()
+  const modalRef = useRef();
+  const navigate = useNavigate();
+  const [openReview, setOpenReview] = useState(false);
 
-
-  const backdrop = movie.backdrop_path?.trim()
+  const backdrop = movie.backdrop_path?.trim();
 
   useEffect(() => {
     const handler = (e) => {
       if (modalRef.current && !modalRef.current.contains(e.target)) {
-        onClose()
+        onClose();
       }
-    }
-    document.addEventListener("mousedown", handler)
-    return () => document.removeEventListener("mousedown", handler)
-  }, [onClose])
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, [onClose]);
 
   return (
     <AnimatePresence>
@@ -40,7 +41,6 @@ const QuickViewModal = ({ movie, onClose }) => {
             className="bg-zinc-900/90 backdrop-blur-xl text-white w-[92%] max-w-200 
             rounded-3xl shadow-2xl overflow-hidden border border-white/10"
           >
-       
             <button
               onClick={onClose}
               className="absolute right-4 top-4 w-9 h-9 flex items-center justify-center 
@@ -50,11 +50,13 @@ const QuickViewModal = ({ movie, onClose }) => {
               ✕
             </button>
 
-         
             <div className="relative h-[280px] md:h-[340px]">
-             <img src={backdrop 
-                  ? `https://image.tmdb.org/t/p/original${backdrop}` 
-                  : mHPlaceholder}
+              <img
+                src={
+                  backdrop
+                    ? `https://image.tmdb.org/t/p/original${backdrop}`
+                    : mHPlaceholder
+                }
                 className="w-full h-full object-cover"
               />
               <div className="absolute inset-0 bg-linear-to-t from-black via-black/40 to-transparent" />
@@ -73,32 +75,53 @@ const QuickViewModal = ({ movie, onClose }) => {
               </div>
             </div>
 
-
             <div className="p-6">
               <p className="text-sm leading-relaxed text-neutral-300 line-clamp-4">
                 {movie.overview}
               </p>
 
-              <div className="flex flex-wrap gap-3 mt-6">
+              <div className="mt-6 flex flex-wrap items-center gap-3">
+                {/* View Details – Primary */}
                 <button
                   onClick={() => navigate(`/movie/${movie.id}`)}
-                  className="px-6 py-2.5 flex gap-2 items-center bg-yellow-400 
-                  rounded-lg hover:bg-yellow-300 transition font-semibold text-black shadow-md"
+                  className="px-6 py-3 flex gap-2 items-center bg-yellow-400 
+                  rounded-xl hover:bg-yellow-300 transition font-semibold 
+                  text-black shadow-lg"
                 >
-                  <TbMovie className="text-lg" /> View Movie Details
+                  <TbMovie className="text-lg" /> View Details
                 </button>
 
-                <div className="backdrop-blur-md bg-white/5 border border-white/10 
-                rounded-lg hover:bg-white/10 transition">
+                {/* Watchlist */}
+                <div className="bg-white/5 border border-white/10 
+                rounded-xl hover:bg-white/10 transition shadow-md">
                   <WatchlistButton movie={movie} variant="modal" />
                 </div>
+
+                {/* Write Review */}
+                <button
+                  onClick={() => setOpenReview(true)}
+                  className="px-5 py-3 flex items-center gap-2 
+                  bg-white/10 border border-white/20 
+                  rounded-xl text-sm font-medium hover:bg-white/20 
+                  transition text-white"
+                >
+                  ✍ Write Review
+                </button>
+
               </div>
+              {openReview && (
+                  <ReviewModal
+                    movie={movie}
+                    onClose={() => setOpenReview(false)}
+                  />
+                )}
+
             </div>
           </motion.div>
         </motion.div>
       )}
     </AnimatePresence>
-  )
-}
+  );
+};
 
-export default QuickViewModal
+export default QuickViewModal;

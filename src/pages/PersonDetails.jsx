@@ -5,6 +5,7 @@ import moviePlaceholder from "../assets/m-placeholder.png"
 import { fetchPersonDetails } from '../services/tmbdApi'
 import { FadeLoader } from 'react-spinners'
 import QuickViewModal from '../components/modals/QuickViewModal'
+import GoBackBtn from '../components/ui/GoBackBtn'
 
 const PersonDetails = () => {
   const { id } = useParams()
@@ -32,7 +33,9 @@ const PersonDetails = () => {
 </div>
 
 return (
-  <div className="min-h-screen bg-gradient-to-b from-neutral-950 via-neutral-900 to-black text-white py-16 px-6">
+  <div className="min-h-screen bg-gradient-to-b rounded-2xl from-neutral-950 via-neutral-900 to-black text-white pb-16 px-6">
+     
+     <GoBackBtn />
 
     <div className="max-w-6xl mx-auto bg-white/5 backdrop-blur-xl rounded-3xl p-8 shadow-2xl border border-white/10">
 
@@ -81,7 +84,7 @@ return (
           {person.movie_credits.cast.slice(0, 10).map(movie => (
             <div key={movie.id} className="group cursor-pointer" onClick={() => navigate(`/movie/${movie.id}`)}>
               <img
-                src={`https://image.tmdb.org/t/p/w300${movie.poster_path}`}
+                src={movie.poster_path ? `https://image.tmdb.org/t/p/w500${movie.poster_path}` : moviePlaceholder}
                 className="rounded-xl group-hover:scale-105 transition"
               />
               <p className="text-sm mt-2 opacity-80 truncate">

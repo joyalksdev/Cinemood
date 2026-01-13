@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react"
 import { useParams, useNavigate } from "react-router-dom"
 import { fetchMovieCredits, fetchMovieDetails } from "../services/tmbdApi"
 import userPlaceholder from "../assets/user-placeholder.png"
-
+import GoBackBtn from '../components/ui/GoBackBtn'
 import { FadeLoader } from "react-spinners"
 
 const CastCrewDetails = () => {
@@ -10,11 +10,14 @@ const CastCrewDetails = () => {
   const navigate = useNavigate()
   const [credits, setCredits] = useState(null)
   const [movie, setMovie] = useState(null)
+  
 
   useEffect(() => {
     fetchMovieCredits(id).then(setCredits)
     fetchMovieDetails(id).then(setMovie)
   }, [id])
+
+
 
   if (!credits || !movie) return <div className='p-6 '>
   <FadeLoader
@@ -27,7 +30,9 @@ const CastCrewDetails = () => {
   </div>
 
   return (
-    <div className="px-8 py-6 text-white">
+    <div className="px-8 py-3 text-white">
+
+      <GoBackBtn />
 
       <h2 className="text-3xl font-bold mb-1">{movie.title}</h2>
       <p className="text-neutral-400 mb-6">Full Cast & Crew</p>

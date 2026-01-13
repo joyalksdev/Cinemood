@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { fetchBrowseMovies } from "../services/tmbdApi"
-import QuickViewModal from '../components/ui/QuickViewModal'
+import QuickViewModal from '../components/modals/QuickViewModal'
 import { FadeLoader } from 'react-spinners'
 import CardSkelton from '../components/cards/CardSkelton'
 import FilterBar from '../components/search/FilterBar'

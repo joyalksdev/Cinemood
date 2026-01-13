@@ -1,5 +1,5 @@
 import { useWatchlist } from "../context/WatchlistContext"
-import QuickViewModal from "../components/ui/QuickViewModal"
+import QuickViewModal from "../components/modals/QuickViewModal"
 import { useState } from "react"
 import FadeLoader from "react-spinners/FadeLoader"
 

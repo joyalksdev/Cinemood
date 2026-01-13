@@ -20,15 +20,29 @@ const RecommendationCard = () => {
   const rowRef = useRef(null);
   const { addToWatchlist } = useWatchlist();
 
-  useEffect(() => {
+ useEffect(() => {
+  const loadRecommendations = async () => {
     setLoading(true);
-    if (!user?.genres?.length) return;
 
-    fetchPersonalizedMovies(user.genres, user.language).then((data) =>
-      setMovies(data)
-    );
-    setLoading(false);
-  }, [user]);
+    if (!user?.genres?.length) {
+      setMovies([]);
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const data = await fetchPersonalizedMovies(user.genres, user.language);
+      setMovies(data || []);
+    } catch (error) {
+      console.error("Recommendation fetch failed:", error);
+      setMovies([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  loadRecommendations();
+}, [user]);
 
   const scroll = (direction) => {
     if (!rowRef.current) return;
@@ -89,21 +103,16 @@ const RecommendationCard = () => {
         ref={rowRef}
         className="flex gap-2 md:gap-6 overflow-x-auto scrollbar-hide px-1 md:px-6 py-4"
       >
-        {movies.length === 0 && (
-          <p className="text-neutral-400 px-4">
-            Select genres during onboarding to get personalized recommendations.
-          </p>
-        )}
+       {loading && [...Array(6)].map((_, i) => <CardSkelton key={i} />)}
 
-        {loading && [...Array(6)].map((_, i) => <CardSkelton key={i} />)}
+      {!loading && movies.length === 0 && (
+        <p className="text-neutral-400 px-4">
+          Select genres during onboarding to get personalized recommendations.
+        </p>
+      )}
 
-        {!loading && movies.length === 0 && (
-          <p className="text-neutral-400 px-4">No movies found</p>
-        )}
-
-   
-        {!loading &&
-          movies.map((movie) => (
+      {!loading &&
+        movies.map((movie) => (
             <div
               key={movie.id}
               className="relative min-w-[120px] md:min-w-[250px] max-w-[200px] md:max-w-[490px] 

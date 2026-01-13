@@ -22,7 +22,7 @@ export const UserProvider = ({ children }) => {
       let profile = null
       try {
         profile = await getUserProfile(authUser.uid)
-        console.log("Fetching profile for UID:", uid)
+        console.log("Fetching profile for UID:", authUser.uid)
       } catch (err) {
         console.warn("Profile fetch failed — continuing without profile")
       }

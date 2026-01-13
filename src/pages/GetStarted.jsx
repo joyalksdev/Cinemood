@@ -29,6 +29,7 @@ const GetStarted = () => {
   const [name, setName] = useState("");
   const [genres, setGenres] = useState([]);
   const [language, setLanguage] = useState("");
+  const [step, setStep] = useState(1);
 
   if (loading) return null;
 
@@ -44,9 +45,8 @@ const GetStarted = () => {
         <div className="w-full max-w-md sm:max-w-lg md:max-w-xl">
           <Stepper
             initialStep={1}
-            onStepChange={(step) => {
-              console.log(step);
-            }}
+            onStepChange={(s) => setStep(s)}
+            isNextDisabled={step === 2 && !name.trim()} // ⬅ MAIN LOGIC
             onFinalStepCompleted={async () => {
               const profileData = {
                 name,
@@ -81,10 +81,20 @@ const GetStarted = () => {
               <p>This name will appear on your profile and watchlist.</p>
               <input
                 type="text"
+                value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="mt-4 w-full py-3 px-4 text-base rounded-xl border border-neutral-700 bg-neutral-900 focus:border-[#FFC509] outline-none"
-                placeholder="Display Name"
+                className={`mt-4 w-full py-3 px-4 rounded-xl border bg-neutral-900 outline-none
+                ${!name.trim() && step === 2
+                    ? "border-red-500 focus:border-red-500"
+                    : "border-neutral-700 focus:border-[#FFC509]"}`}
+                              placeholder="Display Name"
               />
+
+              {!name.trim() && step === 2 && (
+                <p className="text-red-400 text-sm mt-1">
+                  Please enter your name to continue
+                </p>
+              )}
             </Step>
 
             <Step>

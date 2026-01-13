@@ -1,8 +1,10 @@
-import { createContext, useContext, useEffect, useState, useRef } from "react"
-import { doc, setDoc, getDoc } from "firebase/firestore"
+import { createContext, useContext, useEffect, useState } from "react"
+import { auth } from "../firebase/firebase"
+import { onAuthStateChanged } from "firebase/auth"
+import { getDocs, collection, doc, setDoc } from "firebase/firestore"
 import { db } from "../firebase/firebase"
 import { useUser } from "./UserContext"
-import { FadeLoader } from "react-spinners"
+import { deleteDoc } from "firebase/firestore"
 
 
 const WatchlistContext = createContext()
@@ -10,60 +12,51 @@ const WatchlistContext = createContext()
 export const WatchlistProvider = ({ children }) => {
   const { user } = useUser()
   const [watchlist, setWatchlist] = useState([])
-  const isLoaded = useRef(false)
-  const [loading, setLoading] = useState(true)
-
-
-  // When user logs out, clear everything instantly
-  useEffect(() => {
-    if (!user) {
-      setWatchlist([])
-      isLoaded.current = false
-      return
-    }
-
-  const loadWatchlist = async () => {
-    isLoaded.current = false
-    setLoading(true)
-
-    const ref = doc(db, "watchlists", user.uid)
-    const snap = await getDoc(ref)
-
-    if (snap.exists()) {
-      setWatchlist(snap.data().movies || [])
-    } else {
-      await setDoc(ref, { movies: [] })
-      setWatchlist([])
-    }
-
-    isLoaded.current = true
-     setLoading(false)
-  }
-
-  loadWatchlist()
-}, [user])
-
-
-  // Save to firestore only after load
+  const [authReady, setAuthReady] = useState(false)
 
   useEffect(() => {
-    if (!user || !isLoaded.current) return
+    const unsub = onAuthStateChanged(auth, () => setAuthReady(true))
+    return () => unsub()
+  }, [])
 
-    setDoc(doc(db, "watchlists", user.uid), { movies: watchlist })
-  }, [watchlist, user])
+  useEffect(() => {
+    if (!authReady || !user?.uid || !auth.currentUser) return
+    migrateAndLoad()
+  }, [authReady, user?.uid])
 
-  const addToWatchlist = (movie) => {
-    setWatchlist(prev =>
-      prev.find(m => m.id === movie.id) ? prev : [...prev, movie]
+  const migrateAndLoad = async () => {
+    const snap = await getDocs(
+      collection(db, "watchlists", auth.currentUser.uid, "movies")
     )
+    setWatchlist(snap.docs.map(d => ({ id: d.id, ...d.data() })))
   }
 
-  const removeFromWatchlist = (id) => {
-    setWatchlist(prev => prev.filter(movie => movie.id !== id))
-  }
+const addToWatchlist = async (movie) => {
+  if (!auth.currentUser) return
+
+  const ref = doc(db, "watchlists", auth.currentUser.uid, "movies", movie.id.toString())
+
+  await setDoc(ref, movie)
+
+  setWatchlist(prev =>
+    prev.some(m => m.id === movie.id) ? prev : [...prev, movie]
+  )
+}
+
+
+  const removeFromWatchlist = async (id) => {
+  if (!auth.currentUser) return
+
+  await deleteDoc(
+    doc(db, "watchlists", auth.currentUser.uid, "movies", id.toString())
+  )
+
+  setWatchlist(prev => prev.filter(movie => movie.id !== id))
+}
+
 
   return (
-    <WatchlistContext.Provider value={{ watchlist, addToWatchlist, removeFromWatchlist, loading }}>
+    <WatchlistContext.Provider value={{ watchlist, addToWatchlist, removeFromWatchlist }}>
       {children}
     </WatchlistContext.Provider>
   )

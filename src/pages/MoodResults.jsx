@@ -2,7 +2,7 @@ import { useLocation } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { discoverByGenre, searchByMoodKeyword } from '../services/tmbdApi'
 import { FadeLoader } from 'react-spinners'
-import QuickViewModal from '../components/ui/QuickViewModal'
+import QuickViewModal from '../components/modals/QuickViewModal'
 import moviePlaceholder from "../assets/m-placeholder.png"
 
 const MoodResults = () => {
