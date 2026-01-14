@@ -19,11 +19,11 @@ const Footer = () => {
 
         <div className='flex flex-col gap-2 '>
           <h2 className='font-bold text-xl mb-2'>Explore</h2>
-          <Link className="text-md hover:underline transition-all ease-in" >Trending</Link>
+          <Link to='/movies/trending' className="text-md hover:underline transition-all ease-in" >Trending</Link>
           <Link className="text-md hover:underline transition-all ease-in" >New Arrival</Link>
-          <Link className="text-md hover:underline transition-all ease-in" >Top Rated</Link>
-          <Link className="text-md hover:underline transition-all ease-in" >Genres</Link>
-          <Link className="text-md hover:underline transition-all ease-in" >Watchlist</Link>
+          <Link to='/movies/top_rated' className="text-md hover:underline transition-all ease-in" >Top Rated</Link>
+          <Link to='/browse' className="text-md hover:underline transition-all ease-in" >Genres</Link>
+          <Link to='/watchlist' className="text-md hover:underline transition-all ease-in" >Watchlist</Link>
         </div>
 
         <div className='flex flex-col gap-2 '>
