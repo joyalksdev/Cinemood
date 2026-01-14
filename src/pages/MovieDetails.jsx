@@ -47,8 +47,10 @@ const MovieDetails = () => {
     load();
   }, [id]);
 
+    // Load Cinemood reviews using useReviews hook
   const { reviews, loading } = useReviews(movie?.id);
 
+    // Use Cinemood reviews first, fallback to TMDB reviews
   const displayReviews =
     reviews.length > 0 ? reviews.slice(0, 4) : tmdbReviews.slice(0, 4);
 
@@ -248,7 +250,7 @@ const MovieDetails = () => {
                       Cinemood User
                     </span>
                   </span>
-                  <span className="text-[#FFC509]">⭐ {r.rating}/10</span>
+                  <span className="text-[#FFC509]">⭐ {r.rating}/5</span>
                 </div>
                 <p className="mt-2 text-sm text-neutral-200 line-clamp-4">
                   {r.text}
