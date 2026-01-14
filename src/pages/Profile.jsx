@@ -84,7 +84,7 @@ const Profile = () => {
             <p className="text-center text-sm text-[#FFC509]">{message}</p>
           )}
 
-          {/* Name */}
+         
           <div>
             <label>Name</label>
             <input
@@ -94,7 +94,7 @@ const Profile = () => {
             />
           </div>
 
-          {/* Genres */}
+        
           <div>
             <label>Favorite Genres</label>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mt-3">
@@ -120,7 +120,7 @@ const Profile = () => {
             </div>
           </div>
 
-          {/* Language */}
+          
           <div>
             <label>Language</label>
             <div className="flex flex-wrap gap-3 mt-3">
@@ -140,7 +140,7 @@ const Profile = () => {
             </div>
           </div>
 
-          {/* Password */}
+          {/* Update the New  Password using Firebase */}
           <div>
             <label>New Password</label>
             <input

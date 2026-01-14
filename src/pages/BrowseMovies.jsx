@@ -22,7 +22,7 @@ const BrowseMovies = () => {
     sort: "rating"
   })
 
-  // Fetch Movies
+  
   useEffect(() => {
     setLoading(true)
 

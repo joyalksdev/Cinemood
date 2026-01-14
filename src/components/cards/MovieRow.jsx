@@ -5,12 +5,25 @@ import { useWatchlist } from "../../context/WatchlistContext";
 import WatchlistButton from "../ui/WatchlistButton";
 import moviePlaceholder from "../../assets/m-placeholder.png";
 import CardSkelton from "./CardSkelton";
+import { useNavigate } from "react-router-dom";
 
-const MovieRow = ({ title, fetchFn }) => {
+
+const MovieRow = ({ rowId, title, fetchFn }) => {
   const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedMovie, setSelectedMovie] = useState(null);
   const { addToWatchlist } = useWatchlist();
+  const navigate = useNavigate()
+
+  const rows = [
+  { id: "now_playing", title: "🎬 Now Playing Movies" },
+  { id: "top_rated", title: "⭐ Top Rated Movies" },
+  { id: "trending", title: "🔥 Trending Movies" },
+  { id: "popular_kdrama", title: "🇰🇷 Popular K-Dramas" },
+  { id: "popular_anime", title: "🍥 Popular Anime" },
+  { id: "top_20", title: "🏆 Top 20 Movies" }
+] 
+
 
   useEffect(() => {
     setLoading(true);
@@ -40,7 +53,18 @@ const MovieRow = ({ title, fetchFn }) => {
       )}
 
       <div className="flex justify-between items-center">
-        <h2 className="font-bold heading text-xl md:text-2xl">{title}</h2>
+        <div>
+          <h2 className="font-bold heading text-xl md:text-2xl">{title}</h2>
+
+          <button
+          onClick={() => navigate(`/movies/${rowId}`)}
+          className="text-[#FFC509] cursor-pointer px-10 text-sm hover:underline"
+        >
+          See All →
+        </button>
+
+        </div>
+
 
         <div className="hidden lg:flex gap-3">
           <button
@@ -111,7 +135,7 @@ const MovieRow = ({ title, fetchFn }) => {
                 <div className="flex justify-between pt-2">
                   <button
                     onClick={() => setSelectedMovie(movie)}
-                    className="text-md px-7 py-1 rounded-2xl bg-[#FFC509] hover:bg-amber-300 font-medium text-black"
+                    className="text-md px-7 py-1 rounded-2xl bg-[#FFC509] cursor-pointer hover:bg-amber-300 font-medium text-black"
                   >
                     View Details
                   </button>

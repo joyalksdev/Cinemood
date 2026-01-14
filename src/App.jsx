@@ -18,6 +18,7 @@ import PersonDetails from "./pages/PersonDetails";
 import MovieReviews from "./pages/MovieReviews";
 import MoodResults from "./pages/MoodResults";
 import { Toaster } from "react-hot-toast";
+import MovieRowPage from "./pages/MovieRowPage";
 
 const App = () => {
   const { user, loading } = useUser();
@@ -71,6 +72,7 @@ const App = () => {
           <Route path="/browse" element={<BrowseMovies />} />
           <Route path="/watchlist" element={<Watchlist />} />
           <Route path="/movie/:id" element={<MovieDetails />} />
+          <Route path="/movies/:type" element={<MovieRowPage />} />
           <Route path="/movie/:id/cast-crew" element={<CastCrewDetails />} />
           <Route path="/person/:id" element={<PersonDetails />} />
           <Route path="/movie/:id/reviews" element={<MovieReviews />} />

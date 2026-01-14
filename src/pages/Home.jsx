@@ -23,19 +23,25 @@ const Home = () => {
 
         <RecommendationCard />
         
-        <MovieRow title="🔥 Trending Movies" fetchFn={fetchTrendingMovies} /> 
-
-        <MovieRow title="🏆 Top 20 Movies" fetchFn={fetchTopRatedMovies} />
-
+        <MovieRow rowId="trending" title="🔥 Trending Movies" fetchFn={fetchTrendingMovies} /> 
+        
         <MoodMatcher />
+        
+        <MovieRow rowId="top_rated" title="🏆 Top 20 Movies" fetchFn={fetchTopRatedMovies} />
 
-        <MovieRow title="🎬 Now Playing Movies" fetchFn={fetchNowPlayingMovies} />
+        <MovieRow rowId="now_playing" title="🎬 Now Playing Movies" fetchFn={fetchNowPlayingMovies}/>
+        
+        <MovieRow rowId="popular_movies" title="🍿 Popular Movies" fetchFn={fetchPopularMovies} />
+        
+        <MovieRow rowId="popular_kdrama" title="🇰🇷 Popular K-Dramas" fetchFn={fetchPopularKDramas} />
+        
+        <MovieRow rowId="popular_anime" title="🍥 Popular Anime" fetchFn={fetchPopularAnime} />
 
-        <MovieRow title="🍿 Popular Movies" fetchFn={fetchPopularMovies} />
+            
+                                                                                       
+        
 
-        <MovieRow title="🇰🇷 Popular K-Dramas" fetchFn={fetchPopularKDramas} />
 
-        <MovieRow title="🍥 Popular Anime" fetchFn={fetchPopularAnime} />
 
                 
       </section>

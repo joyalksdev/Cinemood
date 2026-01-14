@@ -1,44 +1,44 @@
-import { useState } from "react"
-import { X, Star } from "lucide-react"
-import { toast } from "react-hot-toast"
-import { addReview } from "../../services/reviewService"
-import { useUser } from "../../context/UserContext"
+import { useState } from "react";
+import { X, Star } from "lucide-react";
+import { toast } from "react-hot-toast";
+import { addReview } from "../../services/reviewService";
+import { useUser } from "../../context/UserContext";
 
 const ReviewModal = ({ movie, onClose }) => {
-  const { user } = useUser()
-  const [rating, setRating] = useState(0)
-  const [hover, setHover] = useState(0)
-  const [text, setText] = useState("")
-  const [loading, setLoading] = useState(false)
+  const { user } = useUser();
+  const [rating, setRating] = useState(0);
+  const [hover, setHover] = useState(0);
+  const [text, setText] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const submitReview = async () => {
     if (!rating || !text.trim()) {
-      toast.error("Please select rating & write review")
-      return
+      toast.error("Please select rating & write review");
+      return;
     }
 
     try {
-      setLoading(true)
+      setLoading(true);
       await addReview(movie.id, {
-        username: user?.displayName || "Cinemood User",
+        username:
+          user?.displayName || user?.email?.split("@")[0] || "Cinemood User",
         rating,
-        text
-      })
+        text,
+      });
 
-      toast.success("Review published 🎉")
-      onClose()
+      toast.success("Review published 🎉");
+      onClose();
     } catch (err) {
-      toast.error("Failed to post review")
+      toast.error("Failed to post review");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   return (
     <div className="fixed inset-0 bg-black/70 backdrop-blur-md flex justify-center items-center z-50">
       <div className="bg-zinc-900 w-[90%] max-w-md rounded-2xl p-6 border border-white/10 shadow-2xl">
-
-        {/* Header */}
+       
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-semibold">Review – {movie.title}</h2>
           <button onClick={onClose}>
@@ -46,9 +46,8 @@ const ReviewModal = ({ movie, onClose }) => {
           </button>
         </div>
 
-        {/* Stars */}
         <div className="flex justify-center gap-2 mb-4">
-          {[1,2,3,4,5].map((n) => (
+          {[1, 2, 3, 4, 5].map((n) => (
             <Star
               key={n}
               size={34}
@@ -68,7 +67,6 @@ const ReviewModal = ({ movie, onClose }) => {
           {rating ? `You rated ${rating} stars` : "Tap to rate"}
         </p>
 
-        {/* Review Box */}
         <textarea
           value={text}
           onChange={(e) => setText(e.target.value)}
@@ -76,7 +74,7 @@ const ReviewModal = ({ movie, onClose }) => {
           className="w-full h-28 bg-black/40 rounded-xl p-3 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-yellow-400"
         />
 
-        {/* Buttons */}
+        
         <div className="flex justify-end gap-3 mt-5">
           <button
             onClick={onClose}
@@ -95,7 +93,7 @@ const ReviewModal = ({ movie, onClose }) => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default ReviewModal
+export default ReviewModal;

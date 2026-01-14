@@ -140,7 +140,7 @@ const RecommendationCard = () => {
                 <div className="flex justify-between pt-2">
                   <button
                     onClick={() => setSelectedMovie(movie)}
-                    className="text-md px-7 py-1 rounded-2xl bg-[#FFC509] hover:bg-amber-300 font-medium text-black"
+                    className="text-md px-7 py-1 rounded-2xl bg-[#FFC509] cursor-pointer hover:bg-amber-300 font-medium text-black"
                   >
                     View Details
                   </button>

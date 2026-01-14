@@ -19,29 +19,30 @@ export const registerUser = async (email, password) => {
 
   return res.user
 }
-
+// Email & Password Login
 export const loginUser = async (email, password) => {
   const res = await signInWithEmailAndPassword(auth, email, password)
   const profile = await getUserProfile(res.user.uid)
 
   return { user: res.user, profile }
 }
-
+// Google Login
 export const googleLogin = async () => {
   const res = await signInWithPopup(auth, googleProvider)
+  const user = res.user
 
-  let profile = await getUserProfile(res.user.uid)
-
-  if (!profile) {
-    await saveUserProfile(res.user.uid, {
-      email: res.user.email,
-      onboarded: false,
-      createdAt: new Date().toISOString()
-    })
-    profile = { onboarded: false }
+  const userProfile = {
+    email: user.email,
+    displayName: user.displayName,
+    photoURL: user.photoURL,
+    onboarded: false,
+    createdAt: new Date().toISOString()
   }
 
-  return { user: res.user, profile }
+  // Always save / update profile
+  await saveUserProfile(user.uid, userProfile)
+
+  return { user, profile: userProfile }
 }
 
 
