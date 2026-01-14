@@ -36,6 +36,7 @@ const MovieRowPage = () => {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "instant" })
     if (!API_MAP[type]) return
 
     setLoading(true)
